@@ -1,179 +1,180 @@
 name: Build Windows Application
 
 on:
-    # Trigger on push to main branch
-    push:
-        branches: [main, master]
+  # Trigger on push to main branch
+  push:
+    branches: [main, master]
 
-    # Trigger on pull request to main branch
-    pull_request:
-        branches: [main, master]
+  # Trigger on pull request to main branch
+  pull_request:
+    branches: [main, master]
 
-    # Allow manual triggering from GitHub UI
-    workflow_dispatch:
-        inputs:
-            build_type:
-                description: "Build type (dev or prod)"
-                required: true
-                default: "prod"
-                type: choice
-                options:
-                    - dev
-                    - prod
+  # Allow manual triggering from GitHub UI
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: "Build type (dev or prod)"
+        required: true
+        default: "prod"
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
-    build-windows:
-        runs-on: windows-latest
+  build-windows:
+    runs-on: windows-latest
 
-        steps:
-            # Step 1: Checkout the repository
-            - name: Checkout Repository
-              uses: actions/checkout@v4
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-            # Step 2: Setup Python (required for backend)
-            - name: Setup Python
-              uses: actions/setup-python@v5
-              with:
-                  python-version: "3.11" # Adjust to your Python version
-                  cache: "pip"
+      # Step 2: Setup Python (required for backend)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11" # Adjust to your Python version
+          cache: "pip"
+          cache-dependency-path: "backend/requirements.txt"
 
-            # Step 3: Install Python dependencies
-            - name: Install Python Dependencies
-              working-directory: ./backend
-              run: |
-                  python -m pip install --upgrade pip
-                  pip install -r requirements.txt
-              shell: pwsh
+      # Step 3: Install Python dependencies
+      - name: Install Python Dependencies
+        working-directory: ./backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+        shell: pwsh
 
-            # Step 4: Create .env files for backend
-            # Note: These should be configured as GitHub Secrets
-            - name: Create Backend Environment Files
-              working-directory: ./backend
-              run: |
-                  echo "${{ secrets.BACKEND_ENV_PRODUCTION }}" > .env.production
-                  echo "${{ secrets.BACKEND_ENV_DEVELOPMENT }}" > .env.development
-              shell: pwsh
+      # Step 4: Create .env files for backend
+      # Note: These should be configured as GitHub Secrets
+      - name: Create Backend Environment Files
+        working-directory: ./backend
+        run: |
+          echo "${{ secrets.BACKEND_ENV_PRODUCTION }}" > .env.production
+          echo "${{ secrets.BACKEND_ENV_DEVELOPMENT }}" > .env.development
+        shell: pwsh
 
-            # Step 5: Setup Node.js (required for frontend and electron)
-            - name: Setup Node.js
-              uses: actions/setup-node@v4
-              with:
-                  node-version: "20"
-                  cache: "npm"
+      # Step 5: Setup Node.js (required for frontend and electron)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          # cache: "npm"  # Uncomment after package-lock.json is committed
 
-            # Step 6: Install root dependencies
-            - name: Install Root Dependencies
-              run: npm install
-              shell: pwsh
+      # Step 6: Install root dependencies
+      - name: Install Root Dependencies
+        run: npm install
+        shell: pwsh
 
-            # Step 7: Install frontend dependencies
-            - name: Install Frontend Dependencies
-              working-directory: ./frontend
-              run: npm install
-              shell: pwsh
+      # Step 7: Install frontend dependencies
+      - name: Install Frontend Dependencies
+        working-directory: ./frontend
+        run: npm install
+        shell: pwsh
 
-            # Step 8: Install backend Node dependencies
-            - name: Install Backend Node Dependencies
-              working-directory: ./backend
-              run: npm install
-              shell: pwsh
+      # Step 8: Install backend Node dependencies
+      - name: Install Backend Node Dependencies
+        working-directory: ./backend
+        run: npm install
+        shell: pwsh
 
-            # Step 9: Build Frontend (Production)
-            - name: Build Frontend
-              run: npm run build:frontend:prod
-              shell: pwsh
+      # Step 9: Build Frontend (Production)
+      - name: Build Frontend
+        run: npm run build:frontend:prod
+        shell: pwsh
 
-            # Step 10: Build Backend with PyInstaller (Windows .exe)
-            - name: Build Backend Windows Executable
-              run: npm run build:backend:windows
-              shell: pwsh
-              env:
-                  PYINSTALLER_BUILD: "1"
+      # Step 10: Build Backend with PyInstaller (Windows .exe)
+      - name: Build Backend Windows Executable
+        run: npm run build:backend:windows
+        shell: pwsh
+        env:
+          PYINSTALLER_BUILD: "1"
 
-            # Step 11: Verify Backend Build
-            - name: Verify Backend Build
-              run: |
-                  if (Test-Path "backend/dist/wellstation-backend.exe") {
-                    Write-Host "✅ Backend executable built successfully!"
-                    $size = (Get-Item "backend/dist/wellstation-backend.exe").Length / 1MB
-                    Write-Host "📦 Executable size: $([math]::Round($size, 2)) MB"
-                  } else {
-                    Write-Error "❌ Backend executable not found!"
-                    exit 1
-                  }
-              shell: pwsh
+      # Step 11: Verify Backend Build
+      - name: Verify Backend Build
+        run: |
+          if (Test-Path "backend/dist/wellstation-backend.exe") {
+            Write-Host "✅ Backend executable built successfully!"
+            $size = (Get-Item "backend/dist/wellstation-backend.exe").Length / 1MB
+            Write-Host "📦 Executable size: $([math]::Round($size, 2)) MB"
+          } else {
+            Write-Error "❌ Backend executable not found!"
+            exit 1
+          }
+        shell: pwsh
 
-            # Step 12: Package Electron App for Windows
-            - name: Package Electron Application
-              run: npm run dist:windows
-              shell: pwsh
-              env:
-                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 12: Package Electron App for Windows
+      - name: Package Electron Application
+        run: npm run dist:windows
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            # Step 13: List build output
-            - name: List Build Output
-              run: |
-                  Write-Host "📂 Build output contents:"
-                  Get-ChildItem -Path "release-prod" -Recurse -File | ForEach-Object {
-                    $size = [math]::Round($_.Length / 1MB, 2)
-                    Write-Host "$($_.FullName) - ${size} MB"
-                  }
-              shell: pwsh
+      # Step 13: List build output
+      - name: List Build Output
+        run: |
+          Write-Host "📂 Build output contents:"
+          Get-ChildItem -Path "release-prod" -Recurse -File | ForEach-Object {
+            $size = [math]::Round($_.Length / 1MB, 2)
+            Write-Host "$($_.FullName) - ${size} MB"
+          }
+        shell: pwsh
 
-            # Step 14: Upload Windows Installer
-            - name: Upload Windows Installer
-              uses: actions/upload-artifact@v4
-              with:
-                  name: wellstation-windows-installer
-                  path: |
-                      release-prod/*.exe
-                      release-prod/*.msi
-                  retention-days: 30
-                  if-no-files-found: error
+      # Step 14: Upload Windows Installer
+      - name: Upload Windows Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: wellstation-windows-installer
+          path: |
+            release-prod/*.exe
+            release-prod/*.msi
+          retention-days: 30
+          if-no-files-found: error
 
-            # Step 15: Upload Unpacked Application (for debugging)
-            - name: Upload Unpacked Application
-              uses: actions/upload-artifact@v4
-              with:
-                  name: wellstation-windows-unpacked
-                  path: release-prod/win-unpacked/
-                  retention-days: 7
-                  if-no-files-found: warn
+      # Step 15: Upload Unpacked Application (for debugging)
+      - name: Upload Unpacked Application
+        uses: actions/upload-artifact@v4
+        with:
+          name: wellstation-windows-unpacked
+          path: release-prod/win-unpacked/
+          retention-days: 7
+          if-no-files-found: warn
 
-            # Step 16: Create Release (only on push to main/master with tags)
-            - name: Create GitHub Release
-              if: startsWith(github.ref, 'refs/tags/v')
-              uses: softprops/action-gh-release@v1
-              with:
-                  files: |
-                      release-prod/*.exe
-                      release-prod/*.msi
-                  draft: true
-                  generate_release_notes: true
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Step 16: Create Release (only on push to main/master with tags)
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release-prod/*.exe
+            release-prod/*.msi
+          draft: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # Optional: Test the built executable
-    test-executable:
-        needs: build-windows
-        runs-on: windows-latest
+  # Optional: Test the built executable
+  test-executable:
+    needs: build-windows
+    runs-on: windows-latest
 
-        steps:
-            - name: Download Built Application
-              uses: actions/download-artifact@v4
-              with:
-                  name: wellstation-windows-unpacked
-                  path: ./app
+    steps:
+      - name: Download Built Application
+        uses: actions/download-artifact@v4
+        with:
+          name: wellstation-windows-unpacked
+          path: ./app
 
-            - name: Test Executable Launch
-              run: |
-                  Write-Host "🧪 Testing if backend executable can start..."
-                  # Try to run the backend with --help or check if it exists
-                  if (Test-Path "./app/resources/backend/wellstation-backend.exe") {
-                    Write-Host "✅ Backend executable found in packaged app"
-                  } else {
-                    Write-Error "❌ Backend executable not found in packaged app"
-                    exit 1
-                  }
-              shell: pwsh
-              continue-on-error: true
+      - name: Test Executable Launch
+        run: |
+          Write-Host "🧪 Testing if backend executable can start..."
+          # Try to run the backend with --help or check if it exists
+          if (Test-Path "./app/resources/backend/wellstation-backend.exe") {
+            Write-Host "✅ Backend executable found in packaged app"
+          } else {
+            Write-Error "❌ Backend executable not found in packaged app"
+            exit 1
+          }
+        shell: pwsh
+        continue-on-error: true
