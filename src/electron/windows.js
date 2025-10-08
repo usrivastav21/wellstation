@@ -1,0 +1,171 @@
+// src/electron/windows.js
+const { BrowserWindow, app } = require("electron");
+const path = require("path");
+const isDevMode = require("electron-is-dev");
+const { shutdown } = require("./shutdown");
+
+const waitForFlaskServer = (port, maxAttempts = 30) => {
+  return new Promise((resolve, reject) => {
+    let attempts = 0;
+
+    const checkServer = async () => {
+      try {
+        const response = await fetch(`http://localhost:${port}/api/health`);
+        if (response.ok) {
+          resolve(true);
+        } else {
+          throw new Error("Server not ready");
+        }
+      } catch (error) {
+        attempts++;
+        if (attempts >= maxAttempts) {
+          reject(new Error("Server failed to start"));
+        } else {
+          setTimeout(checkServer, 3000);
+        }
+      }
+    };
+
+    checkServer();
+  });
+};
+
+const createMainWindow = (port) => {
+  let mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    minWidth: 800,
+    minHeight: 600,
+    frame: true,
+    show: false,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      enableRemoteModule: false,
+      preload: path.join(__dirname, "../../preload.js"),
+    },
+  });
+
+  mainWindow.prepareForShow = () => {
+    mainWindow.maximize();
+    mainWindow.center();
+  };
+
+  mainWindow.loadContent = () => {
+    if (isDevMode) {
+      console.log("Development mode: Loading from dev server");
+      mainWindow.loadURL("http://localhost:3000");
+      mainWindow.webContents.openDevTools({ mode: "right" });
+    } else {
+      console.log("Production mode: Loading from bundled frontend");
+      const frontendPath = path.join(
+        app.getAppPath(),
+        "frontend",
+        "dist",
+        "index.html"
+      );
+
+      mainWindow.loadFile(frontendPath).catch((error) => {
+        console.error("Failed to load frontend file:", error, frontendPath);
+      });
+    }
+  };
+
+  mainWindow.on("close", () => {
+    shutdown();
+  });
+
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+
+  return mainWindow;
+};
+
+const createLoadingWindow = () => {
+  let loadingWindow = new BrowserWindow({
+    width: 400,
+    height: 300,
+    frame: false,
+    show: false,
+    alwaysOnTop: true,
+    resizable: false,
+    webPreferences: {
+      contextIsolation: true,
+      nodeIntegration: false,
+      enableRemoteModule: false,
+    },
+  });
+
+  const loadingHTML = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Loading WellStation...</title>
+      <style>
+        body {
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          font-family: Lexend, sans-serif;
+        }
+        .loader {
+          text-align: center;
+          color: black;
+        }
+        .spinner {
+          width: 50px;
+          height: 50px;
+          border: 5px solid rgba(255,255,255,0.3);
+          border-top: 5px solid black;
+          border-radius: 50%;
+          animation: spin 1s linear infinite;
+          margin: 0 auto 20px;
+        }
+        h2 {
+          color: black;
+        }
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="loader">
+        <div class="spinner"></div>
+        <h2>Loading WellStation...</h2>
+      </div>
+    </body>
+    </html>
+  `;
+
+  loadingWindow.center();
+
+  loadingWindow.loadURL(
+    `data:text/html;charset=utf-8,${encodeURIComponent(loadingHTML)}`
+  );
+
+  loadingWindow.on("closed", () => {
+    loadingWindow = null;
+  });
+
+  return loadingWindow;
+};
+
+const createWindows = async (port) => {
+  const main = createMainWindow(port);
+  const loading = createLoadingWindow();
+
+  return {
+    mainWindow: main,
+    loadingWindow: loading,
+    waitForFlaskServer: () => waitForFlaskServer(port),
+  };
+};
+
+module.exports = { createWindows, createMainWindow, createLoadingWindow };

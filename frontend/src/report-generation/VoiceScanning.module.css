@@ -1,0 +1,6 @@
+.chatbox {
+  border-bottom: 4px solid var(--mantine-color-brand-6);
+  border-left: 4px solid var(--mantine-color-brand-6);
+  transform: skewX(-45deg);
+  transform-origin: bottom right;
+}

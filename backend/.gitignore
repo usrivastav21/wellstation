@@ -1,0 +1,41 @@
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore compiled Python files
+*.pyc
+__pycache__
+
+# Ignore coverage reports
+coverage/
+*.coverage
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore environment files (IMPORTANT - contains secrets!)
+.env
+.env.*
+!.env.example
+!env.template
+
+# Ignore build artifacts
+dist/
+build/
+*.spec
+
+# Ignore logs
+logs/
+*.log
+
+# media
+processingScripts/features
+processingScripts/final_outputs
+
+python-venv
+*.zip

@@ -1,0 +1,790 @@
+{
+  "analysisLoading": {
+    "mainMessage": "您正在为自己的健康做一件很棒的事！\n继续加油！",
+    "screeningText": "扫描中",
+    "waitMessage": "几乎完成了！"
+  },
+  "basicInfo": {
+    "ageSection": {
+      "age": "年龄段",
+      "options": [
+        {
+          "text": "18岁以下",
+          "value": "<18"
+        },
+        {
+          "text": "18 - 25",
+          "value": "18-25"
+        },
+        {
+          "text": "26 - 35",
+          "value": "26-35"
+        },
+        {
+          "text": "36 - 45",
+          "value": "36-45"
+        },
+        {
+          "text": "46 - 55",
+          "value": "46-55"
+        },
+        {
+          "text": "56 - 65",
+          "value": "56-65"
+        },
+        {
+          "text": "65岁以上",
+          "value": "65+"
+        }
+      ],
+      "placeholder": "选择年龄范围"
+    },
+    "genderSection": {
+      "female": "女",
+      "gender": "性别",
+      "male": "男"
+    },
+    "instructions": [
+      "看着摄像头，按\"开始扫描\"进行30秒的面部扫描。",
+      "按\"继续\"进行30秒的语音扫描，并按照屏幕上的指示操作。",
+      "屏幕上显示的二维码将链接到您的个性化健康报告！"
+    ],
+    "instructionsTitle": "使用说明",
+    "mainDescription": "请提供您的性别和年龄以获取准确的个性化报告。",
+    "modal": {
+      "go": "返回",
+      "message": "您输入的性别和年龄将决定所提供的参考范围。您要继续吗？",
+      "proceed": "继续"
+    },
+    "required": "*",
+    "startScanning": "开始扫描"
+  },
+  "basicInfoConsent": {
+    "go": "返回",
+    "message": "您输入的性别和年龄将决定所提供的参考范围。您要继续吗？",
+    "proceed": "继续"
+  },
+  "consentDeclined": {
+    "exitButton": "退出",
+    "message": "我们完全尊重您的决定。如有任何疑问，请随时联系Suri Tan女士，邮箱：contact@universalhealth.ai。",
+    "title": "您的隐私，我们的优先考虑"
+  },
+  "consentScreen": {
+    "buttons": {
+      "agree": "我同意",
+      "decline": "拒绝"
+    },
+    "description1": "我们的rPPG技术允许我们收集非识别性数据，包括微表情、心率、肤色、声音调制和面部血流。我们通过以下方式保护数据实用性和匿名性：",
+    "header1": "远程光体积描记法 (rPPG)",
+    "list": [
+      {
+        "description": "我们不存储面部或声音记录，而是提取和存储数学变量和派生特征的数据。",
+        "title": "微表情和声音调制"
+      },
+      {
+        "description": "我们不存储确切的肤色，而是将数据标准化（例如：将肤色转换为通用指数），以反映生理变化，如压力引起的潮红，而不识别特定肤色等特征。",
+        "title": "肤色"
+      },
+      {
+        "description": "心率数据可以以原始形式存储（因为它是非识别性的）",
+        "title": "心率"
+      },
+      {
+        "description": "与心率类似，面部血流数据是生理性的，可以通过仅存储指标来匿名化（例如：反映压力的血流变化）。",
+        "title": "面部血流"
+      }
+    ],
+    "mainDescription": "我们进行30秒的面部和音频扫描，以分析非识别性数据，如微表情、心率、肤色、声音调制和面部血流。这有助于评估压力、焦虑和抑郁水平，而不识别您的身份。生成结果后，所有数据将被删除，确保匿名性。",
+    "mainHeader": "您的隐私，我们的优先考虑"
+  },
+  "exit": "退出",
+  "exitConfirmation": {
+    "goBack": "返回",
+    "message": "退出此页面将立即删除您的报告和所有相关数据。您确定要退出吗？"
+  },
+  "facialAnalysis": {
+    "anonymityMaintained": "您的匿名性得到保护。",
+    "cameraError": "无法访问摄像头。请检查您的权限设置。",
+    "dataPrivacy": "您的身份是安全的。",
+    "faceObstructed": "面部被部分遮挡。请摘下眼镜、口罩或帽子。",
+    "multipleFaces": "检测到多个面部。请确保同一时间只有一个人进行扫描。",
+    "nearlyComplete": "即将完成！",
+    "noFaceDetected": "未检测到人脸或人脸部分被遮挡。请取下眼镜、口罩或帽子，并将脸对准圆圈框内。",
+    "scanningProgress": {
+      "almostDone": {
+        "line1": "即将完成！您的",
+        "line2": "匿名性得到保护。"
+      },
+      "complete": {
+        "line1": "即将完成！您的",
+        "line2": "匿名性得到保护。"
+      },
+      "half": {
+        "line1": "扫描中... 已完成",
+        "line2": "一半的路程！"
+      },
+      "initial": {
+        "line1": "扫描进行中...",
+        "line2": "您的身份是安全的。"
+      },
+      "quarter": {
+        "line1": "为您量身定制的",
+        "line2": "匿名结果。"
+      }
+    },
+    "scanningStartIn": "扫描即将开始",
+    "tooMuchMovement": "检测到过多移动。我们理解您的兴奋，但请保持30秒稳定！"
+  },
+  "general": {
+    "dismiss": "解雇",
+    "email-address": "电子邮件地址",
+    "exit": "退出",
+    "high": "不良",
+    "low": "理想",
+    "medium": "中等",
+    "name": "名字"
+  },
+  "report": {
+    "alternate-title": "体检指标",
+    "auto-close-message": "此页面将在{{count}}秒后自动关闭。",
+    "copy-sent-message": "我们已将报告副本发送到您的电子邮件。",
+    "error": "加载患者数据时出错：",
+    "infoText": {
+      "anxietyLevels": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测您的焦虑水平非常重要，因为长期焦虑可能会导致严重的健康问题，例如惊恐发作、抑郁症，以及增加心脏病的风险。",
+          "type": "text"
+        },
+        {
+          "text": "通过跟踪您的焦虑情况，您可以采取积极措施来管理心理健康，并预防这些并发症。",
+          "type": "text"
+        },
+        {
+          "text": "了解您的情绪状态",
+          "type": "question"
+        },
+        {
+          "text": "偶尔感到焦虑是完全正常的。许多人在日常生活中都会经历焦虑，无论是在重要会议前、公众演讲时，还是面对新的挑战。",
+          "type": "text"
+        },
+        {
+          "text": "该工具可以帮助您了解自己的情绪状态，但如果您觉得焦虑严重影响了您的日常生活或幸福感，随时可以寻求心理健康专业人士的支持和指导。",
+          "type": "text"
+        },
+        {
+          "text": "*前一天晚上饮酒、某些药物或医疗设备（如心脏起搏器）可能会导致读数不准确。",
+          "type": "note"
+        }
+      ],
+      "bloodOxygenLevels": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测您的血氧水平至关重要，因为低血氧（低氧血症）可能导致严重的并发症，包括器官损伤以及头晕和意识模糊等严重症状。",
+          "type": "text"
+        },
+        {
+          "text": "通过跟踪您的血氧水平，您可以及早发现潜在的健康问题，并采取积极措施来维护健康。",
+          "type": "text"
+        },
+        {
+          "text": "结果指南：百分比 (%)",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "良好",
+          "text": ["95 - 100"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "中等",
+          "text": ["93 - 94"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "偏低",
+          "text": ["92 及以下"],
+          "type": "Legend"
+        },
+        {
+          "text": "参考来源: medlineplus.gov",
+          "type": "reference",
+          "url": "https://medlineplus.gov/lab-tests/pulse-oximetry/"
+        },
+        {
+          "text": "*某些药物或部分人群感染 COVID-19 可能导致较低的血氧读数。",
+          "type": "note"
+        }
+      ],
+      "bloodPressure": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测血压有助于及早发现高血压或低血压的迹象，这些情况如果不加以控制，可能会导致心脏病、中风或肾脏问题等严重健康问题。",
+          "type": "text"
+        },
+        {
+          "text": "通过持续关注您的血压，您可以采取积极措施来维护健康，并预防危及生命的并发症。",
+          "type": "text"
+        },
+        {
+          "text": "结果指南：以百分比表示",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "正常",
+          "text": ["收缩压低于130", "且", "舒张压低于85"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "中等",
+          "text": ["收缩压130 - 139", "和/或", "舒张压85 - 89"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "偏高",
+          "text": ["收缩压140或更高", "和/或", "舒张压90或更高"],
+          "type": "Legend"
+        },
+        {
+          "text": "参考来源: myheart.org.sg",
+          "type": "reference",
+          "url": "https://www.myheart.org.sg/health/risk-factors/high-blood-pressure/"
+        },
+        {
+          "text": "*吸烟、饮用含咖啡因的饮料或在30分钟内进行运动可能导致读数不准确。",
+          "type": "note"
+        }
+      ],
+      "depressionLevels": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测您的抑郁水平至关重要，因为未经治疗的抑郁症可能会导致严重的健康问题，例如认知功能障碍（包括记忆力减退）以及增加心脏病的风险。",
+          "type": "text"
+        },
+        {
+          "text": "通过跟踪您的抑郁情况，您可以采取积极措施来管理心理健康，并预防这些并发症。",
+          "type": "text"
+        },
+        {
+          "text": "了解您的情绪状态",
+          "type": "question"
+        },
+        {
+          "text": "感到悲伤、低落或缺乏动力是正常的。生活中的挑战、压力，甚至日常习惯的变化都可能导致短暂的悲伤情绪。",
+          "type": "text"
+        },
+        {
+          "text": "该工具可以帮助您了解自己的情绪状态，但如果这些感觉持续存在或变得难以承受，甚至影响到您的日常生活，寻求心理健康专业人士的帮助可以为您提供清晰的方向和支持。",
+          "type": "text"
+        },
+        {
+          "text": "*前一天晚上饮酒、某些药物或医疗设备（如心脏起搏器）可能会导致读数不准确。",
+          "type": "note"
+        }
+      ],
+      "heartRateText": {
+        "female": {
+          "18-25": [
+            {
+              "text": "Resting heart rate for women at age 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for women at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["42 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for women at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["45 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for women at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["48 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for women at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["50 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for women at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["52 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for women at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ]
+        },
+        "male": {
+          "18-25": [
+            {
+              "text": "Resting heart rate for men at age 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for men at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["44 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for men at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["47 - 66"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["67 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for men at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["49 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["68 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for men at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["51 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["68 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for men at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["52 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 79"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["80 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for men at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ]
+        }
+      },
+      "restingHeartRate": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测您的静息心率非常重要，因为心率过高可能表明心血管疾病和其他健康问题的风险增加。",
+          "type": "text"
+        },
+        {
+          "text": "通过跟踪您的心率，您可以采取积极措施来改善心脏健康和整体身体素质。",
+          "type": "text"
+        },
+        {
+          "text": "结果指南：bpm = 每分钟心跳数",
+          "type": "chartTitle"
+        },
+        {
+          "text": "18 - 25 岁男性的静息心率",
+          "type": "UnderLinedText"
+        },
+        {
+          "result": "good",
+          "resultText": "良好",
+          "text": ["40 - 65"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "中等",
+          "text": ["66 - 81"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "偏高",
+          "text": ["82 及以上"],
+          "type": "Legend"
+        },
+        {
+          "text": "参考来源: medicinenet.com",
+          "type": "reference",
+          "url": "https://www.medicinenet.com/what_is_a_good_resting_heart_rate_by_age/article.htm"
+        },
+        {
+          "text": "*压力、饮用含咖啡因的饮料或在运动后 2 小时内测量可能会导致读数不准确。",
+          "type": "note"
+        }
+      ],
+      "stressLevels": [
+        {
+          "text": "为什么这很重要？",
+          "type": "question"
+        },
+        {
+          "text": "定期监测您的压力水平很重要，因为长期压力会增加患心脏病、糖尿病和免疫功能障碍的风险。",
+          "type": "text"
+        },
+        {
+          "text": "通过跟踪压力水平，您可以实施有效的管理策略，以维护整体健康和福祉。",
+          "type": "text"
+        },
+        {
+          "text": "理解您的情绪状态",
+          "type": "question"
+        },
+        {
+          "text": "感到压力是完全正常的。压力是对工作、家庭和日常挑战的自然反应。这是人类在面对责任和压力时的正常表现。",
+          "type": "text"
+        },
+        {
+          "text": "此工具可以帮助您了解自己的情绪状态，但如果您发现压力变得难以承受或影响到您的健康，请不要犹豫，向专业人士寻求帮助。与心理咨询师或治疗师交谈可以帮助您制定有效的压力管理策略。",
+          "type": "text"
+        },
+        {
+          "text": "*在夜间饮酒、服用某些药物或使用某些医疗设备（例如心脏起搏器）可能会导致读数不准确。",
+          "type": "note"
+        }
+      ]
+    },
+    "legends": {
+      "good": "良好",
+      "mid": "中等",
+      "poor": "较差",
+      "title": "图例"
+    },
+    "loading": "正在加载患者数据...",
+    "metrics": {
+      "anxietyLevel": "焦虑指数",
+      "bloodOxygenLevel": "血氧水平",
+      "bloodPressure": "血压",
+      "depressionLevel": "抑郁指数",
+      "restingHeartRate": "静息心率",
+      "stressLevel": "压力指数"
+    },
+    "title": "您的报告组成"
+  },
+  "result": {
+    "autoCloseMessage": "此页面将在{{seconds}}秒后自动关闭。",
+    "completionMessage": "您的个性化报告已准备就绪，其中包含有用的提示和建议！",
+    "congratulations": "恭喜您完成健康检查！",
+    "exit": "退出",
+    "glow-festival-completion-message": "您的个性化报告将在下一页显示。\n 输入您的电子邮件，获取含健康小贴士的报告副本!",
+    "lets-see-my-result": "来看看我的结果吧！",
+    "privacyMessage": "一旦此页面关闭，您的数据将从我们的系统中删除（除非您提交电子邮件以存储报告）。正如我们承诺的，您的隐私是我们的优先考虑。",
+    "qrInstructions": "您的报告受到良好保护。扫描二维码在浏览器中加载。"
+  },
+  "sessionComplete": {
+    "imageAlt": "表示数据删除的垃圾桶图标",
+    "message": "您的咨询已结束。"
+  },
+  "sound-analysis": {
+    "low-volume-1": "你的声音太微弱了。",
+    "low-volume-2": "请大声说话或者靠近平板电脑。"
+  },
+  "voiceScanning": {
+    "alternate-title-1": "接下来，我们只需要一小段语音样本，用来测量您的音高、语调、音量和语速。",
+    "alternate-title-2": "我们不会追踪或存储您的语音内容。",
+    "alternate-title-3": "为了帮助您自然说话，不如试着回答这些问题吧！",
+    "mainTitle": "接下来，请说任何话让我们扫描您的声音。",
+    "no-speech": {
+      "description": "你能试着说出来吗？",
+      "title": "未检测到声音。"
+    },
+    "prompts": {
+      "daily": {
+        "description": "让我们谈谈您的日常生活，包括习惯、日常安排，以及任何您想改进的地方。",
+        "question": "您最近好吗？"
+      },
+      "travel": {
+        "description": "让我们谈谈您对旅行的喜好，包括您喜欢去的地方类型和任何您喜爱的经历。",
+        "question": "您喜欢旅行吗？"
+      }
+    },
+    "questions": [
+      "你最喜欢的菜是什么？为什么？",
+      "今天天气怎么样？",
+      "你今天有什么计划？",
+      "你最喜欢的度假地点是哪里？为什么？"
+    ],
+    "scanningText": "扫描中",
+    "startButton": "开始扫描",
+    "startInstruction": "按下\"开始扫描\"进行30秒的语音扫描并开始说话。",
+    "suggestionHeader": "以下是建议："
+  }
+}

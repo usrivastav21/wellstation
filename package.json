@@ -1,0 +1,110 @@
+{
+  "name": "wellstation-desktop-app",
+  "version": "1.0.0",
+  "description": "WellStation Desktop Application - Combined Frontend and Backend",
+  "main": "main.js",
+  "scripts": {
+    "install:deps": "npm install --prefix frontend && npm run install:python --prefix backend",
+    "dev": "npm run dev:dev",
+    "dev:dev": "concurrently \"npm run dev:frontend:dev\" \"npm run dev:electron:dev\"",
+    "dev:prod": "concurrently \"npm run dev:frontend:prod\" \"npm run dev:electron:prod\"",
+    "dev:frontend:dev": "npm run dev:dev --prefix frontend",
+    "dev:frontend:prod": "npm run build:prod:electron --prefix frontend",
+    "dev:electron:dev": "wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .",
+    "dev:electron:prod": "wait-on http://localhost:3000 && cross-env NODE_ENV=production electron .",
+    "build": "npm run build:dev",
+    "build:dev": "npm run build:frontend:dev && npm run build:backend:dev",
+    "build:prod": "npm run build:frontend:prod && npm run build:backend:prod",
+    "build:frontend:dev": "npm run build:dev --prefix frontend",
+    "build:frontend:prod": "npm run build:prod:electron --prefix frontend",
+    "build:backend:dev": "npm run build:python:dev --prefix backend",
+    "build:backend:prod": "npm run build:python:prod --prefix backend",
+    "electron": "electron .",
+    "electron:dev": "cross-env NODE_ENV=development electron .",
+    "electron:prod": "cross-env NODE_ENV=production electron .",
+    "pack": "npm run build:dev && electron-builder --dir",
+    "dist": "npm run build:dev && electron-builder",
+    "dist:dev": "npm run build:dev && electron-builder --config electron-builder-dev.json",
+    "dist:prod": "npm run build:prod && electron-builder --config electron-builder-prod.json",
+    "dist:win": "npm run build:dev && electron-builder --win --x64",
+    "dist:mac": "npm run build:dev && electron-builder --mac",
+    "dist:all": "npm run build:dev && electron-builder --mac --win --linux",
+    "build:windows": "npm run build:frontend:prod && npm run build:backend:windows",
+    "build:backend:windows": "npm run build:python:windows:prod --prefix backend",
+    "dist:windows": "npm run build:windows && electron-builder --config electron-builder-prod.json --win"
+  },
+  "keywords": [
+    "electron",
+    "desktop",
+    "wellstation",
+    "health"
+  ],
+  "author": "WellStation Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^37.2.3",
+    "electron-builder": "^24.9.1",
+    "electron-devtools-installer": "^3.2.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.wellstation.desktop",
+    "productName": "WellStation Desktop",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/electron/**/*",
+      "frontend/dist/**/*",
+      "backend/dist/**/*",
+      "node_modules/**/*",
+      "node_modules/.pnpm/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "backend/processingScripts",
+        "to": "processingScripts"
+      },
+      {
+        "from": "backend/app",
+        "to": "app"
+      },
+      {
+        "from": "backend/dist",
+        "to": "backend"
+      }
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "dependencies": {
+    "axios": "^1.10.0",
+    "electron-is-dev": "^2.0.0",
+    "form-data": "^4.0.3",
+    "get-port": "5.1.1"
+  }
+}

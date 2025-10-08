@@ -1,0 +1,198 @@
+.root {
+  /* box-shadow: 0 0 0 1px var(--mantine-color-brand-3); */
+  border: 1px solid var(--mantine-color-brand-3);
+}
+
+.panel {
+  padding: rem(16px);
+  max-width: rem(760px);
+
+  border-top-right-radius: var(--mantine-radius-lg);
+  border-bottom-right-radius: var(--mantine-radius-lg);
+  &[data-active] {
+    background-color: #fae0c2;
+  }
+}
+
+.tab {
+  min-height: rem(195.5px);
+  min-width: rem(206px);
+  border: none;
+  border-top-left-radius: var(--mantine-radius-lg);
+  border-bottom-left-radius: var(--mantine-radius-lg);
+
+  &[data-active] {
+    background-color: #fae0c2;
+  }
+}
+
+.tabsList {
+  &::before {
+    border: none;
+  }
+}
+
+.datePicker {
+  background-color: white;
+  height: 100%;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.levelsGroup {
+}
+
+.monthCell {
+  font-size: rem(28px);
+  width: rem(104px);
+  height: rem(120px);
+  position: relative;
+}
+
+.day {
+  &[data-size="xl"] {
+    --day-size-xl: rem(96px);
+    width: rem(96px);
+    height: rem(96px);
+    font-size: rem(24px);
+    border-radius: 50%;
+
+    &[data-selected] {
+      background-color: var(--mantine-color-brand-3);
+      &[data-first-in-range] {
+      }
+    }
+  }
+}
+
+.weekday {
+  padding-bottom: rem(24px);
+}
+
+.calendarHeader {
+  height: rem(74px);
+  align-items: center;
+  max-width: none;
+  width: 100%;
+  &[data-size="xl"] {
+    --dch-control-size-xl: rem(74px);
+  }
+}
+
+.monthsList {
+  width: 100%;
+}
+
+.monthListCell {
+  height: rem(164px);
+  width: rem(242px);
+}
+
+.monthListControl {
+  &[data-size="xl"] {
+    --dpc-size-xl: rem(96px);
+  }
+  width: rem(242px);
+}
+
+.yearsList {
+  width: 100%;
+}
+
+.yearsListCell {
+  height: rem(164px);
+  width: rem(242px);
+}
+
+.yearsListControl {
+  &[data-size="xl"] {
+    --dpc-size-xl: rem(96px);
+  }
+  width: rem(242px);
+}
+
+.calendarHeaderLevel {
+  padding-left: rem(32px);
+  justify-content: flex-start;
+  border-top-left-radius: var(--mantine-radius-lg);
+}
+
+.calendarHeaderControl {
+  &[data-direction="next"] {
+    border-top-right-radius: var(--mantine-radius-lg);
+  }
+}
+
+.stressSubTabPanel {
+  background-color: white;
+  flex: 1;
+  border-radius: var(--mantine-radius-lg);
+}
+
+.stressSubTabRoot {
+  height: 100%;
+}
+
+.stressSubTab {
+  border-radius: rem(12px);
+
+  &[data-active] {
+    border: none;
+    background-color: var(--mantine-color-brand-3);
+  }
+}
+
+.stressSubTabLabel {
+  font-size: rem(32px);
+  font-weight: var(--mantine-h1-font-weight);
+}
+
+.stressSubTabList {
+  justify-content: center;
+  column-gap: rem(44px);
+  margin-bottom: rem(16px);
+  &::before {
+    border: none;
+  }
+}
+
+.drawerContent {
+  max-height: rem(936px);
+  margin-top: rem(144px);
+  border-top-left-radius: var(--mantine-radius-xl);
+}
+
+.drawerHeader {
+  padding: rem(24px) rem(32px);
+  background-color: #fae0c2;
+}
+
+.drawerTitle {
+  font-size: var(--mantine-font-size-3xl);
+  text-align: center;
+  flex: 1;
+}
+
+.drawerClose {
+  width: rem(32px);
+  height: rem(32px);
+  & > svg > path {
+    fill: var(--mantine-color-brandDark-5);
+    stroke-width: 2;
+  }
+}
+
+.drawerBody {
+  padding: rem(24px) rem(32px);
+}
+
+.groupRoot {
+  /* overflow-x: scroll; */
+}
+
+.scrollAreaRoot {
+  transition: width 250ms ease-in-out;
+}
+
+.legend {
+  justify-content: center;
+}

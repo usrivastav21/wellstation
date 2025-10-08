@@ -1,0 +1,105 @@
+/* .react-datepicker__day {
+  width: 2.5rem;
+  line-height: 2.5rem;
+}
+
+.react-datepicker__month .react-datepicker__month-text {
+  width: 10rem;
+  line-height: 6rem;
+  font-size: 2.5rem;
+}
+
+.react-datepicker-year-header {
+  font-size: 2.5rem;
+  line-height: 2.5rem;
+  padding: 1rem;
+}
+
+.react-datepicker__month-text--selected {
+  background-color: var(--chakra-colors-brand-100);
+}
+
+.react-datepicker__navigation {
+  width: 4.5rem;
+  height: 4.5rem;
+}
+
+.react-datepicker__navigation-icon::before {
+  width: 1rem;
+  height: 1rem;
+  top: 0.9rem;
+}
+
+.react-datepicker__navigation-icon {
+  font-size: 2.5rem;
+} */
+
+.reactCalender {
+  width: 50rem;
+  font-size: 2rem;
+  border-radius: var(--chakra-radii-xl);
+}
+
+:global(.react-calendar__tile--active) {
+  background-color: var(--chakra-colors-primary-400);
+}
+
+:global(.react-calendar__tile--now) {
+  background-color: var(--chakra-colors-transparent);
+  box-shadow: var(--chakra-shadows-primary-border-shadow-xs);
+}
+
+@media (min-width: 48em) {
+  :global(.react-calendar .react-calendar__navigation) {
+    height: 3rem;
+    margin-bottom: 0.5rem;
+  }
+  :global(.react-calendar .react-calendar__navigation button) {
+    min-width: 3rem;
+    min-height: 3rem;
+  }
+  :global(
+      .react-calendar
+        .react-calendar__navigation
+        .react-calendar__navigation__label
+    ) {
+    font-size: var(--chakra-fontSizes-xl);
+  }
+  .calendarTile {
+    font-size: var(--chakra-fontSizes-lg);
+    border-radius: var(--chakra-radii-lg);
+    padding: 2rem;
+  }
+  .reactCalender {
+    width: 30rem;
+    font-size: var(--chakra-fontSizes-xl);
+    border-radius: var(--chakra-radii-xl);
+  }
+}
+
+@media (min-width: 67em) {
+  :global(.react-calendar .react-calendar__navigation) {
+    height: 5rem;
+    margin-bottom: 1rem;
+  }
+  :global(.react-calendar .react-calendar__navigation button) {
+    min-width: 5rem;
+    min-height: 5rem;
+  }
+  :global(
+      .react-calendar
+        .react-calendar__navigation
+        .react-calendar__navigation__label
+    ) {
+    font-size: var(--chakra-fontSizes-2xl);
+  }
+  .calendarTile {
+    font-size: var(--chakra-fontSizes-2xl);
+    border-radius: var(--chakra-radii-xl);
+  }
+  .reactCalender {
+    width: 50rem;
+    font-size: var(--chakra-fontSizes-2xl);
+    border-radius: var(--chakra-radii-xl);
+  }
+}

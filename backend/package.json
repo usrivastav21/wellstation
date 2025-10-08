@@ -1,0 +1,66 @@
+{
+  "author": "WellStation Team",
+  "buildOptions": {
+    "pyinstaller": {
+      "additionalHooks": [],
+      "dataFiles": [
+        {
+          "dest": "processingScripts",
+          "src": "processingScripts"
+        },
+        {
+          "dest": "app",
+          "src": "app"
+        }
+      ],
+      "distpath": "./dist",
+      "hiddenImports": [
+        "flask",
+        "flask_cors",
+        "sklearn",
+        "numpy",
+        "pandas",
+        "cv2",
+        "torch",
+        "onnxruntime",
+        "opensmile",
+        "audinterface",
+        "audresample",
+        "librosa",
+        "soundfile"
+      ],
+      "name": "wellstation-backend",
+      "onefile": true,
+      "specpath": "./build",
+      "workpath": "./build"
+    }
+  },
+  "description": "WellStation Backend - Flask API Server",
+  "engines": {
+    "python": ">=3.8"
+  },
+  "keywords": [
+    "flask",
+    "api",
+    "python",
+    "backend"
+  ],
+  "license": "MIT",
+  "main": "run.py",
+  "name": "@wellstation/backend",
+  "scripts": {
+    "build": "npm run build:python:dev",
+    "build:python": "npm run build:python:dev",
+    "build:python:dev": "node scripts/dispatch build python dev",
+    "build:python:prod": "node scripts/dispatch build python prod",
+    "dev": "python3 manage.py dev 3001",
+    "install:python": "pip3 install -r requirements.txt",
+    "prod": "python3 manage.py prod",
+    "requirements": "pip3 freeze > requirements.txt",
+    "test": "python3 -m pytest tests/ -v",
+    "test:ffmpeg": "node scripts/test-ffmpeg.js",
+    "build:python:windows:prod": "node scripts/dispatch-windows.js build python prod",
+    "build:python:windows:dev": "node scripts/dispatch-windows.js build python dev"
+  },
+  "version": "1.0.0"
+}

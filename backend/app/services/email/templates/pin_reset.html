@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PIN Reset - W3LL Station</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    style="
+      font-family: Lexend, Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 20px;
+      background-color: white;
+    "
+  >
+    <div style="max-width: 600px; margin: 0 auto">
+      <h2 style="font-size: 32px; font-weight: normal; margin-bottom: 20px">
+        Hello,
+      </h2>
+
+      <p style="font-size: 32px; margin-bottom: 20px">
+        You requested to reset your PIN, please refer to the new pin below:
+      </p>
+
+      <p style="font-size: 40px; margin-bottom: 20px; text-align: center">
+        {temp_pin}
+      </p>
+
+      <div style="margin: 30px 0; font-size: 32px">
+        <p>Login again to change your own pin</p>
+      </div>
+
+      <div style="margin-top: 40px">
+        <p style="font-size: 32px; margin: 10px 0">
+          A Healthier You, A Better World.
+        </p>
+        <img
+          src="{logo_url}"
+          alt="Universal Health Logo"
+          style="width: 150px; margin-top: 15px"
+        />
+      </div>
+    </div>
+  </body>
+</html>

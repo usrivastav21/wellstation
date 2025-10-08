@@ -1,0 +1,103 @@
+Admin Account Details
+==================================================
+
+1. Username: adminadm1
+   Password: 5*JPAql7
+   Venue: adminadm1
+   Launch: ''
+
+2. Username: adminadm2
+   Password: ERNE$2pg
+   Venue: adminadm2
+   Launch: ''
+
+3. Username: adminadm3
+   Password: 4udD72!K
+   Venue: adminadm3
+   Launch: ''
+
+4. Username: adminadm4
+   Password: V3SdqJ$W
+   Venue: adminadm4
+   Launch: ''
+
+5. Username: adminadm5
+   Password: 9Ob41%Yi
+   Venue: adminadm5
+   Launch: ''
+
+6. Username: adminadm6
+   Password: en%6kF#W
+   Venue: adminadm6
+   Launch: ''
+
+7. Username: adminadm7
+   Password: Q0us&fO#
+   Venue: adminadm7
+   Launch: ''
+
+8. Username: adminadm8
+   Password: 6A^MRnw%
+   Venue: adminadm8
+   Launch: ''
+
+9. Username: adminadm9
+   Password: %UexI9AE
+   Venue: adminadm9
+   Launch: ''
+
+10. Username: adminadm10
+   Password: Sq@59X9p
+   Venue: adminadm10
+   Launch: ''
+
+11. Username: adminadm11
+   Password: Jv&Lzr03
+   Venue: adminadm11
+   Launch: ''
+
+12. Username: adminadm12
+   Password: 9dncK8%r
+   Venue: adminadm12
+   Launch: ''
+
+13. Username: adminadm13
+   Password: Kk%$&1qI
+   Venue: adminadm13
+   Launch: ''
+
+14. Username: adminadm14
+   Password: 3m1Kmd!R
+   Venue: adminadm14
+   Launch: ''
+
+15. Username: adminadm15
+   Password: Avb%U*w5
+   Venue: adminadm15
+   Launch: ''
+
+16. Username: adminadm16
+   Password: vnvuQA%6
+   Venue: adminadm16
+   Launch: ''
+
+17. Username: adminadm17
+   Password: EyFFvl@4
+   Venue: adminadm17
+   Launch: ''
+
+18. Username: adminadm18
+   Password: 0oe0Cuj&
+   Venue: adminadm18
+   Launch: ''
+
+19. Username: adminadm19
+   Password: %!gkNjm5
+   Venue: adminadm19
+   Launch: ''
+
+20. Username: adminadm20
+   Password: 2&wfS^vH
+   Venue: adminadm20
+   Launch: ''
+

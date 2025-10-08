@@ -1,0 +1,50 @@
+{
+  "appId": "com.wellstation.desktop",
+  "directories": {
+    "output": "release-prod"
+  },
+  "extraResources": [
+    {
+      "from": "backend/dist",
+      "to": "backend"
+    },
+    {
+      "from": "backend/.env",
+      "to": "backend/.env"
+    },
+    {
+      "from": "frontend/dist/models",
+      "to": "models"
+    }
+  ],
+  "files": [
+    "main.js",
+    "preload.js",
+    "src/electron/**/*",
+    "frontend/dist/**/*",
+    "backend/dist/**/*",
+    "node_modules/**/*",
+    "node_modules/.pnpm/**/*"
+  ],
+  "linux": {
+    "target": "AppImage"
+  },
+  "mac": {
+    "target": "dmg"
+  },
+  "nsis": {
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true,
+    "oneClick": false
+  },
+  "productName": "WellStation Desktop",
+  "win": {
+    "target": [
+      {
+        "arch": ["x64"],
+        "target": "nsis"
+      }
+    ]
+  }
+}

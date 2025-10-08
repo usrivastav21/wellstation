@@ -1,0 +1,13 @@
+.label {
+  flex-direction: column;
+  gap: rem(8px);
+  font-size: var(--mantine-font-size-lg);
+  color: var(--mantine-color-text-9);
+}
+
+.root {
+  &[data-size="xl"] {
+    --button-height-xl: rem(104px);
+    padding: 0;
+  }
+}

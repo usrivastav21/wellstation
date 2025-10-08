@@ -1,0 +1,801 @@
+{
+  "analysisLoading": {
+    "mainMessage": "That's fantastic for your wellbeing! \nKeep it up!",
+    "screeningText": "Wrapping up",
+    "waitMessage": "Almost complete!"
+  },
+  "basicInfo": {
+    "ageSection": {
+      "age": "Age Group",
+      "options": [
+        {
+          "text": "Less than 18",
+          "value": "<18"
+        },
+        {
+          "text": "18 - 25",
+          "value": "18-25"
+        },
+        {
+          "text": "26 - 35",
+          "value": "26-35"
+        },
+        {
+          "text": "36 - 45",
+          "value": "36-45"
+        },
+        {
+          "text": "46 - 55",
+          "value": "46-55"
+        },
+        {
+          "text": "56 - 65",
+          "value": "56-65"
+        },
+        {
+          "text": "65+",
+          "value": "65+"
+        }
+      ],
+      "placeholder": "Select age range"
+    },
+    "genderSection": {
+      "female": "Female",
+      "gender": "Gender",
+      "male": "Male"
+    },
+    "instructions": [
+      "Press \"Start Scan\" for a quick 30 second face scan. Follow the instructions on the screen.",
+      "Read the instructions on the screen. Press \"Start Scan\" for a quick 30 second voice scan.",
+      "Receive a QR code on screen that links to your personalised wellbeing report!"
+    ],
+    "instructionsTitle": "Instructions",
+    "mainDescription": "Please provide your gender and age to receive an accurate and personalised report.",
+    "modal": {
+      "go": "Go Back",
+      "message": "Your input for gender and age will determine the reference range provided. Do you wish to proceed?",
+      "proceed": "Proceed"
+    },
+    "required": "*",
+    "startScanning": "Start Scan"
+  },
+  "basicInfoConsent": {
+    "go": "Go Back",
+    "message": "Your input for gender and age will determine the reference range of results provided to you. Do you wish to proceed?",
+    "proceed": "Proceed"
+  },
+  "consentDeclined": {
+    "exitButton": "Exit",
+    "message": "We completely respect your decision. Feel free to contact Ms Suri Tan at contact@universalhealth.ai anytime for any concerns you may have.",
+    "title": "Your Privacy, Our Priority"
+  },
+  "consentScreen": {
+    "buttons": {
+      "agree": "I Agree",
+      "decline": "Decline"
+    },
+    "description1": "Our technology rPPG allows us to collect non-identifiable data including micro-expressions, heart rate, skin tone, voice modulation, and facial blood flow. We preserve data utility and anonymity through:",
+    "header1": "Remote Photoplethysmography (rPPG)",
+    "list": [
+      {
+        "description": "Instead of storing facial or voice recordings, we extract and store data about mathematical variables and derived features.",
+        "title": "Micro-expressions & Voice Modulation"
+      },
+      {
+        "description": "Instead of storing exact skin tone, we normalise the data (e.g., converting skin tone to a generalised index) so that it reflects physiological changes, like stress-induced flushing, without identifying characteristics like specific skin colour.",
+        "title": "Skin Tone"
+      },
+      {
+        "description": "Heart rate data can be stored in its original form (as it's non-identifiable)",
+        "title": "Heart Rate"
+      },
+      {
+        "description": "Similar to heart rate, facial blood flow data is physiological and can be anonymised by storing only indicators (e.g., changes in blood flow reflecting stress).",
+        "title": "Facial Blood Flow"
+      }
+    ],
+    "mainDescription": "<text><highlight>We are not using your data to train our AI.</highlight> We conduct 30-second facial and audio scans to analyse non-identifiable data like micro-expressions, heart rate, skin tone, voice modulation, and facial blood flow. This helps assess stress, anxiety, and depression levels without identifying you.</text>",
+    "mainHeader": "Your Privacy, Our Priority"
+  },
+  "exit": "Exit",
+  "exitConfirmation": {
+    "goBack": "Go Back",
+    "message": "Exiting this page will delete your report and all associated data immediately. Are you sure you want to exit?"
+  },
+  "facialAnalysis": {
+    "anonymityMaintained": "Your anonymity is maintained.",
+    "cameraError": "Unable to access the camera. Please check your permissions.",
+    "dataPrivacy": "Your identity is secure.",
+    "faceObstructed": "Face is partially obstructed. Please remove any mask or cap.",
+    "loadingModels": "",
+    "multipleFaces": "Multiple faces detected. Please make sure only one person is doing the scan at any one time.",
+    "nearlyComplete": "Nearly complete!",
+    "noFaceDetected": "No face detected or partially obstructed. Remove any glasses, mask, or cap and align your face within the circled frame.",
+    "scanningProgress": {
+      "almostDone": {
+        "line1": "Nearly complete!",
+        "line2": "Your anonymity is maintained."
+      },
+      "complete": {
+        "line1": "Nearly complete!",
+        "line2": "Your anonymity is maintained."
+      },
+      "half": {
+        "line1": "Scanning...",
+        "line2": "halfway to your results!"
+      },
+      "initial": {
+        "line1": "Scan in progress...",
+        "line2": "Your identity is secure."
+      },
+      "quarter": {
+        "line1": "Anonymous results",
+        "line2": "tailored just for you."
+      }
+    },
+    "scanningStartIn": "Starting scan in",
+    "tooMuchMovement": "Too much movement detected. We are as excited as you, but please hold steady for just 30 seconds!"
+  },
+  "general": {
+    "dismiss": "Dismiss",
+    "email-address": "Email Address",
+    "exit": "Exit",
+    "high": "High",
+    "low": "Low",
+    "medium": "Moderate",
+    "name": "Name",
+    "next": "Next"
+  },
+  "report": {
+    "alternate-title": "Your Report",
+    "auto-close-message_one": "This page will automatically close in {{count}} second.",
+    "auto-close-message_other": "This page will automatically close in {{count}} seconds.",
+    "copy-sent-message": "We’ve sent a copy of the report to your email.",
+    "error": "Error loading patient data:",
+    "infoText": {
+      "anxietyLevels": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your anxiety levels is important, as chronic anxiety can lead to serious health issues such as panic attacks, depression, and increased risk of heart disease.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can take proactive steps to manage your mental health and prevent these complications.",
+          "type": "text"
+        },
+        {
+          "text": "Understanding your emotional state",
+          "type": "question"
+        },
+        {
+          "text": "It's completely normal to feel anxious from time to time. Many people experience anxiety in their daily lives, whether it's before an important meeting, public speaking, or facing new challenges.",
+          "type": "text"
+        },
+        {
+          "text": "This tool helps you understand your emotional state, but if you feel like your anxiety is significantly affecting your daily life or well-being, it’s always okay to reach out to a mental health professional for support and guidance.",
+          "type": "text"
+        },
+        {
+          "text": "*Drinking alcohol before the night, certain medications or medical devices (e.g. pacemakers) can cause inaccurate reading.",
+          "type": "note"
+        }
+      ],
+      "bloodOxygenLevels": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your blood oxygen levels is crucial, as low levels (hypoxemia) can lead to serious complications, including organ damage and severe symptoms like dizziness and disorientation.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can detect potential health issues early and take proactive steps to maintain your well-being.",
+          "type": "text"
+        },
+        {
+          "text": "Result Guide: in percentage",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "good",
+          "text": ["95 - 100"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "mid",
+          "text": ["93 - 94"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "low",
+          "text": ["92 and below"],
+          "type": "Legend"
+        },
+        {
+          "text": "Reference: medlineplus.gov",
+          "type": "reference",
+          "url": "https://medlineplus.gov/lab-tests/pulse-oximetry/"
+        },
+        {
+          "text": "*Certain medications or COVID-19 infections in some individuals may lead to a lower reading.",
+          "type": "note"
+        }
+      ],
+      "bloodPressure": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your blood pressure helps detect early signs of hypertension or hypotension, which can lead to serious issues like heart disease, stroke, or kidney problems if left unmanaged.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can take proactive steps to maintain your health and prevent life-threatening complications.",
+          "type": "text"
+        },
+        {
+          "text": "Result Guide: in percentage",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "good",
+          "text": ["Systolic less than 130", "and", "Diastolic less than 85"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "mid",
+          "text": [
+            "Systolic less than 130 - 139",
+            "and/or",
+            "Diastolic 85 - 89"
+          ],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "low",
+          "text": [
+            "Systolic 140 or greater",
+            "and/or",
+            "Diastolic 90 or greater"
+          ],
+          "type": "Legend"
+        },
+        {
+          "text": "Reference: myheart.org.sg",
+          "type": "reference",
+          "url": "https://www.myheart.org.sg/health/risk-factors/high-blood-pressure/"
+        },
+        {
+          "text": "*Smoking, drinking caffeinated beverages or exercising within 30 minutes can cause inaccurate reading.",
+          "type": "note"
+        }
+      ],
+      "depressionLevels": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your depression levels is crucial, as untreated depression can lead to serious health issues such as cognitive impairments, including memory loss, and increased risk of heart disease.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can take proactive steps to manage your mental health and prevent these complications.",
+          "type": "text"
+        },
+        {
+          "text": "Understanding your emotional state",
+          "type": "question"
+        },
+        {
+          "text": "It’s normal to feel sad, down, or unmotivated from time to time. Life’s challenges, stress, and even changes in your routine can cause temporary feelings of sadness.",
+          "type": "text"
+        },
+        {
+          "text": "This tool helps you understand your emotional state, but if you feel like these feelings continue or become overwhelming, or if they interfere with your daily life, speaking to a mental health professional can provide clarity and support.",
+          "type": "text"
+        },
+        {
+          "text": "*Drinking alcohol before the night, certain medications or medical devices (e.g. pacemakers) can cause inaccurate reading.",
+          "type": "note"
+        }
+      ],
+      "heartRateText": {
+        "female": {
+          "18-25": [
+            {
+              "text": "Resting heart rate for women at age 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for women at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["42 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for women at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["45 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for women at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["48 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for women at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["50 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for women at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["52 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["69 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for women at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ]
+        },
+        "male": {
+          "18-25": [
+            {
+              "text": "Resting heart rate for men at age 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for men at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["44 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for men at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["47 - 66"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["67 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for men at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["49 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["68 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for men at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["51 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["68 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for men at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["52 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 79"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["80 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for men at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "mid",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "low",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ]
+        }
+      },
+      "restingHeartRate": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your resting heart rate is important, as an elevated rate can signal an increased risk for cardiovascular diseases and other health issues.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can take proactive steps to improve your heart health and overall fitness.",
+          "type": "text"
+        },
+        {
+          "text": "Result Guide: bpm = beats per minute",
+          "type": "chartTitle"
+        },
+        {
+          "text": "Resting heart rate for male at age 18 - 25",
+          "type": "UnderLinedText"
+        },
+        {
+          "result": "good",
+          "resultText": "good",
+          "text": ["40 - 65"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "mid",
+          "text": ["66 - 81"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "low",
+          "text": ["82 and higher"],
+          "type": "Legend"
+        },
+        {
+          "text": "Reference: medicinenet.com",
+          "type": "reference",
+          "url": "https://www.medicinenet.com/what_is_a_good_resting_heart_rate_by_age/article.htm"
+        },
+        {
+          "text": "*Experiencing stress, drinking caffeinated beverages or exercising within 2 hours can cause inaccurate reading.",
+          "type": "note"
+        }
+      ],
+      "stressLevels": [
+        {
+          "text": "Why is this important?",
+          "type": "question"
+        },
+        {
+          "text": "Regularly monitoring your stress levels is important, as chronic stress can increase the risk of heart disease, diabetes, and immune dysfunction.",
+          "type": "text"
+        },
+        {
+          "text": "By keeping track, you can implement effective management strategies to maintain your overall health and well-being.",
+          "type": "text"
+        },
+        {
+          "text": "Understanding your emotional state",
+          "type": "question"
+        },
+        {
+          "text": "It's completely normal to feel stressed from time to time. Stress is a natural response to the demands of work, family, and everyday challenges. It's part of being human and dealing with the responsibilities and pressures that come with life.",
+          "type": "text"
+        },
+        {
+          "text": "This tool helps you understand your emotional state, but if you find that stress is becoming overwhelming or affecting your health, don't hesitate to seek support from a professional. Talking to a counselor or therapist can help you develop effective stress-management strategies.",
+          "type": "text"
+        },
+        {
+          "text": "*Drinking alcohol before the night, certain medications or medical devices (e.g. pacemakers) can cause inaccurate reading.",
+          "type": "note"
+        }
+      ]
+    },
+    "legends": {
+      "good": "Good",
+      "mid": "Moderate",
+      "poor": "Poor",
+      "title": "Legends"
+    },
+    "loading": "Loading patient data...",
+    "metrics": {
+      "anxietyLevel": "Anxiety Levels",
+      "bloodOxygenLevel": "Blood Oxygen Levels",
+      "bloodPressure": "Blood Pressure",
+      "depressionLevel": "Depression Levels",
+      "restingHeartRate": "Heart Rate",
+      "stressLevel": "Stress Levels"
+    },
+    "title": "Composition of Your Report"
+  },
+  "result": {
+    "autoCloseMessage": "This page will automatically close in {{seconds}}.",
+    "completionMessage": "Your personalised report is ready for you to view and it's full of helpful tips and recommendations!",
+    "congratulations": "Congratulations on completing\n your wellbeing screening!",
+    "exit": "Exit",
+    "glow-festival-completion-message": "Your personalised report will be shown on the next screen.\n Enter your email to get a copy with wellbeing tips and tricks.",
+    "lets-see-my-result": "Let's see my result!",
+    "privacyMessage": "As soon as this page closes, your data is deleted from our system (except when you submit your email to store your report). Like we promised, your privacy is our priority.",
+    "qrInstructions": "Your report is well-protected. Scan the QR code to load on your browser."
+  },
+  "sessionComplete": {
+    "imageAlt": "Dustbin icon indicating data deletion",
+    "message": "Session completed."
+  },
+  "sound-analysis": {
+    "low-volume-1": "Your voice is too faint.",
+    "low-volume-2": "Please speak louder or move closer to the tablet."
+  },
+  "voiceScanning": {
+    "alternate-title-1": "Next, we just need a short voice sample to measure your voice pitch, tone, volume, and pace.",
+    "alternate-title-2": "We are not tracking or storing the content of your speech.",
+    "alternate-title-3": "To aid you in speaking normally, how about answering these questions?",
+    "mainTitle": "To continue, we just need a short voice sample from you. You can say anything you want – it won't affect the results. ",
+    "no-speech": {
+      "description": "Can you try speaking up?",
+      "title": "No voice detected."
+    },
+    "prompts": {
+      "daily": {
+        "description": "Let's talk about your daily life, including habits, routines, and anything you'd like to work on.",
+        "question": "How are you doing?"
+      },
+      "travel": {
+        "description": "Let's talk about what you enjoy about traveling, including the types of places you like to visit and any experiences you love.",
+        "question": "Do you like to travel?"
+      }
+    },
+    "questions": [
+      "What is your favourite dish and why?",
+      "How is the weather today?",
+      "What is your plan for the day?",
+      "Where is your favourite holiday destination and why?"
+    ],
+    "scanningText": "Scanning",
+    "startButton": "Start Scan",
+    "startInstruction": "Press \"Start Scan\" for a quick 30 second voice scan and begin speaking.",
+    "suggestionHeader": "Here's a suggestion:"
+  }
+}

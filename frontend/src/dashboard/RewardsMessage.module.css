@@ -1,0 +1,4 @@
+.content {
+  border: 4px solid var(--mantine-color-brandDark-5);
+  border-radius: var(--mantine-radius-lg);
+}

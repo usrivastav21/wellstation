@@ -1,0 +1,1 @@
+export { FacialAnalysis } from "./FacialAnalysis";

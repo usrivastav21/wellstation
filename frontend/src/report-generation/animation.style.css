@@ -1,0 +1,26 @@
+/* Add this to your CSS file */
+.shake-animation {
+  animation: shake 1.5s infinite; /* Adjust duration as needed */
+}
+
+@keyframes shake {
+  0%,
+  20% {
+    transform: translate(0, 0);
+  } /* Pause */
+  25% {
+    transform: translate(1px, 0);
+  }
+  30% {
+    transform: translate(-1px, 0);
+  }
+  35% {
+    transform: translate(1px, 0);
+  }
+  40% {
+    transform: translate(-1px, 0);
+  }
+  100% {
+    transform: translate(0, 0);
+  } /* Return to original position */
+}

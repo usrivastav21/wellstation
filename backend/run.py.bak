@@ -1,0 +1,67 @@
+import os
+from dotenv import load_dotenv
+from flask import Flask, jsonify, request
+from app.routes.media import process_video, process_audio,fetch_user_report_by_id
+from config import DevelopmentConfig, ProductionConfig
+
+load_dotenv(override=True)
+
+app = Flask(__name__)
+
+if os.getenv('FLASK_ENV') == 'production':
+    app.config.from_object(ProductionConfig)
+else:
+    app.config.from_object(DevelopmentConfig)
+
+def routePrefix(apiRoute):
+    return "/api"+apiRoute
+
+@app.route("/")
+def helloworld():
+    return "Hello World!"
+
+@app.route(routePrefix('/health'), methods=['GET'])
+def get_data():
+    return jsonify({"message": "Hello from API"})
+
+@app.route(routePrefix('/video'), methods=['POST'])
+def initVideoProcessing():
+    try:
+        result = process_video()
+        return jsonify({"status": "success",  "message": "Video processed successfully","data": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+
+@app.route(routePrefix('/audio'), methods=['POST'])
+def initAudioProcessing():
+    try:
+        result = process_audio()
+        return jsonify({"status": "success",  "message": "Audio processed successfully","data": result})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route(routePrefix('/fetch/report/<user_id>'), methods=['GET'])
+def fetch_user_report(user_id):
+    try:
+        if not user_id:
+            return jsonify({"status": "error", "message": "user_id parameter is required"}), 400
+        
+        report = fetch_user_report_by_id(user_id)
+
+        return jsonify({"status": "success", "message": "Report fetched successfully", "data": report[0]})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=5000)
+
+
+# from app import create_app
+# from flask_cors import CORS
+
+# app = create_app()
+# CORS(app, resources={r"/*": {"origins": "*"}})
+
+# if __name__ == '__main__':
+#     app.run(host='0.0.0.0', port=5000)

@@ -1,0 +1,12 @@
+export { default as BadIcon } from "./bad-icon.svg";
+export { default as ExitWithoutArrowIcon } from "./exit-without-arrow.svg";
+export { default as GoodIcon } from "./good-icon.svg";
+export { default as GreatIcon } from "./great-icon.svg";
+export { default as GreenTickMarkIcon } from "./green-tick-mark-icon.svg";
+export { default as NeutralIcon } from "./neutral-icon.svg";
+export { default as ProfileIcon } from "./profile-icon.svg";
+export { default as TeamsIcon } from "./teams-icon.svg";
+export { default as WorstIcon } from "./worst-icon.svg";
+export { default as CoinIcon } from "./coin-icon.svg";
+export { default as CoinIconUnfilled } from "./coin-icon-unfilled.svg";
+export { default as HandHeartIcon } from "./hand-heart-icon.svg";

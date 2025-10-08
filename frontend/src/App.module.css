@@ -1,0 +1,14 @@
+.root {
+  &[data-variant="brand-filled"] {
+    --button-color: var(--mantine-color-text-9);
+    --button-bg: var(--mantine-color-brand-3);
+    --button-hover: var(--mantine-color-brand-4);
+  }
+
+  &[data-variant="brand-subtle"] {
+    --button-color: var(--mantine-color-brandDark-5);
+    --button-hover: var(--mantine-color-brandDark-light-hover);
+    --button-bg: transparent;
+    /* background-color: var(--mantine-color); */
+  }
+}

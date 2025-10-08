@@ -1,0 +1,808 @@
+{
+  "analysisLoading": {
+    "mainMessage": "Anda sedang melakukan sesuatu yang hebat untuk kesejahteraan anda!\nTeruskan usaha anda!",
+    "screeningText": "Mengimbas",
+    "waitMessage": "hampir siap!"
+  },
+  "basicInfo": {
+    "ageSection": {
+      "age": "Golongan Umur",
+      "options": [
+        {
+          "text": "Kuran daripada 18",
+          "value": "<18"
+        },
+        {
+          "text": "18 - 25",
+          "value": "18-25"
+        },
+        {
+          "text": "26 - 35",
+          "value": "26-35"
+        },
+        {
+          "text": "36 - 45",
+          "value": "36-45"
+        },
+        {
+          "text": "46 - 55",
+          "value": "46-55"
+        },
+        {
+          "text": "56 - 65",
+          "value": "56-65"
+        },
+        {
+          "text": "Lebih daripada 65",
+          "value": "65+"
+        }
+      ],
+      "placeholder": "Pilih julat umur"
+    },
+    "genderSection": {
+      "female": "Perempuan",
+      "gender": "Jantina",
+      "male": "Lelaki"
+    },
+    "instructions": [
+      "Lihat ke dalam kamera dan tekan 'Mula Imbas' untuk imbasan muka selama 30 saat.",
+      "Tekan \"Teruskan\" untuk imbasan suara selama 30 saat dan ikuti arahan yang tertera di skrin.",
+      "Kod QR yang tertera di skrin akan mengarahkan kepada laporan peribadi tentang kesejahteraan anda!"
+    ],
+    "instructionsTitle": "Arahan",
+    "mainDescription": "Sila memberi jantina dan umur anda untuk menerima laporan peribadi yang tepat.",
+    "modal": {
+      "go": "Kembali",
+      "message": "Input jantina dan umur anda akan menentukan julat rujukan yang disediakan. Adakah anda ingin meneruskan?",
+      "proceed": "Teruskan"
+    },
+    "required": "*",
+    "startScanning": "Mula Imbas"
+  },
+  "basicInfoConsent": {
+    "go": "Kembali",
+    "message": "Input jantina dan umur anda akan menentukan julat rujukan yang disediakan. Adakah anda ingin meneruskan?",
+    "proceed": "Teruskan"
+  },
+  "consentDeclined": {
+    "exitButton": "Keluar",
+    "message": "Kami menghormati keputusan anda sepenuhnya. Sila hubungi Puan Suri Tan di contact@universalhealth.ai pada bila-bila masa untuk sebarang pertanyaan yang anda mungkin ada.",
+    "title": "Privasi Anda, Keutamaan Kami"
+  },
+  "consentScreen": {
+    "buttons": {
+      "agree": "Saya Setuju",
+      "decline": "Tidak Setuju"
+    },
+    "description1": "Teknologi rPPG membenarkan kami mengumpul data yang tidak dapat dikenal pasti termasuk mikro-ekspresi, kadar denyutan jantung, warna kulit, modulasi suara, dan aliran darah di muka. Kami menjaga kegunaan data dan anonimiti melalui:",
+    "header1": "Fotopletimografi Jarak Jauh (rPPG)",
+    "list": [
+      {
+        "description": "Kami tidak menyimpan rakaman muka atau suara anda. Kami mengekstrak dan menyimpan data mengenai pembolehubah matematik dan ciri-ciri yang diperolehi.",
+        "title": "Mikro-ekspresi & Modulasi Suara"
+      },
+      {
+        "description": "Kami tidak menyimpan data mengenai warna kulit yang tepat. Kami menormalkan data (contoh: menukar warna kulit kepada indeks umum) supaya ia mencerminkan perubahan fisiologi, seperti kemerahan akibat tekanan, tanpa mengenal pasti ciri-ciri seperti warna kulit tertentu.",
+        "title": "Warna Kulit"
+      },
+      {
+        "description": "Data kadar denyutan jantung boleh disimpan dalam bentuk asalnya (kerana ia tidak boleh dikenal pasti).",
+        "title": "Kadar Denyutan Jantung"
+      },
+      {
+        "description": "Sama seperti kadar denyutan jantung, data aliran darah di muka adalah ciri fisiologi dan boleh dianonimkan dengan menyimpan hanya tanda-tanda (contoh: perubahan dalam aliran darah yang mencerminkan tekanan).",
+        "title": "Aliran Darah Di Muka"
+      }
+    ],
+    "mainDescription": "Kami menjalankan imbasan muka dan audio selama 30 saat untuk menganalisis data yang tidak dapat dikenal pasti seperti mikro-ekspresi, kadar denyutan jantung, warna kulit, modulasi suara, dan aliran darah di muka. Ini membantu menilai tahap tekanan, kebimbangan, dan kemurungan tanpa mengenal pasti anda. Semua data akan dipadamkan selepas menghasilkan keputusan anda, memastikan anonimiti.",
+    "mainHeader": "Privasi Anda, Keutamaan Kami"
+  },
+  "exit": "Keluar",
+  "exitConfirmation": {
+    "goBack": "Kembali",
+    "message": "Keluar dari halaman ini akan memadamkan laporan anda dan semua data berkaitan dengan serta-merta. Adakah anda pasti mahu keluar?"
+  },
+  "facialAnalysis": {
+    "anonymityMaintained": "Kerahsiaan anda terjamin.",
+    "cameraError": "Tidak dapat mengakses kamera. Sila periksa kebenaran anda.",
+    "dataPrivacy": "Identiti anda selamat.",
+    "faceObstructed": "Wajah terhalang sebahagiannya. Sila tanggalkan cermin mata, topeng atau topi.",
+    "multipleFaces": "Berbilang wajah dikesan. Sila pastikan hanya seorang sahaja yang melakukan imbasan pada satu masa.",
+    "nearlyComplete": "Hampir selesai!",
+    "noFaceDetected": "Tiada wajah dikesan atau wajah sebahagiannya tersekat. Sila buang cermin mata, pelitup muka, atau topi dan sejajarkan wajah anda dalam bingkai yang dibulatkan.",
+    "scanningProgress": {
+      "almostDone": {
+        "line1": "Hampir selesai! Kerahsiaan",
+        "line2": "anda terjamin."
+      },
+      "complete": {
+        "line1": "Hampir selesai! Kerahsiaan",
+        "line2": "anda terjamin."
+      },
+      "half": {
+        "line1": "Mengimbas... separuh jalan",
+        "line2": "menuju keputusan anda!"
+      },
+      "initial": {
+        "line1": "Imbasan sedang dijalankan...",
+        "line2": "Identiti anda selamat."
+      },
+      "quarter": {
+        "line1": "Keputusan tanpa nama",
+        "line2": "disesuaikan khusus untuk anda."
+      }
+    },
+    "scanningSecurely": "Imbasan sedang dijalankan...",
+    "scanningStartIn": "Imbasan bermula dalam",
+    "tooMuchMovement": "Terlalu banyak pergerakan dikesan. Kami seronok seperti anda, tetapi sila kekal stabil selama 30 saat!"
+  },
+  "general": {
+    "dismiss": "tolak",
+    "email-address": "Alamat E-mel",
+    "exit": "Keluar",
+    "high": "Lemah",
+    "low": "Baik",
+    "medium": "Sederhana",
+    "name": "Nama"
+  },
+  "report": {
+    "alternate-title": "Komposisi laporan anda",
+    "auto-close-message": "Halaman ini akan ditutup secara automatik dalam {{count}} saat.",
+    "copy-sent-message": "Kami telah menghantar salinan laporan ke e-mel anda.",
+    "error": "Kesalahan memuat data pasien:",
+    "infoText": {
+      "anxietyLevels": [
+        {
+          "text": "Mengapakah ini penting?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau tahap kebimbangan anda secara konsisten adalah penting, kerana kebimbangan kronik boleh membawa kepada masalah kesihatan yang serius seperti serangan panik, kemurungan, dan peningkatan risiko penyakit jantung.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengambil langkah proaktif untuk menangani kesihatan mental anda dan mencegah komplikasi.",
+          "type": "text"
+        },
+        {
+          "text": "Memahami keadaan emosi anda",
+          "type": "question"
+        },
+        {
+          "text": "la adalah normal untuk mengalami kebimbangan dari semasa ke semasa. Ramai orang mengalami kebimbangan dalam kehidupan harian mereka, sama ada sebelum mesyuarat penting, bercakap di hadapan orang umum, atau menghadapi cabaran baru.",
+          "type": "text"
+        },
+        {
+          "text": "Alat ini membantu anda memahami keadaan emosi anda. Namun, jika kebimbangan anda memberi kesan yang ketara kepada kehidupan harian atau kesejahteraan anda, ia adalah wajar untuk menghubungi dan mendapati sokongan dan panduan dari profesional kesihatan mental.",
+          "type": "text"
+        },
+        {
+          "text": "*Minum alkohol sebelum tidur, ubat-ubatan tertentu, atau alat perubatan (contohnya, alat pacu jantung) boleh menyebabkan bacaan yang tidak tepat.",
+          "type": "note"
+        }
+      ],
+      "bloodOxygenLevels": [
+        {
+          "text": "Mengapakah ini penting?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau tahap oksigen dalam darah anda secara konsisten adalah penting, kerana tahap yang rendah (hipoksemia) boleh menyebabkan komplikasi serius, termasuk kerosakan organ dan simptom-simptom teruk seperti kepeningan dan kekeliruan.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengesan masalah kesihatan yang berpotensi lebih awal dan mengambil langkah proaktif untuk menjaga kesejahteraan anda.",
+          "type": "text"
+        },
+        {
+          "text": "Panduan Keputusan: Secara Peratusan",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "Baik",
+          "text": ["95 - 100"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "Sederhana",
+          "text": [],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "Lemah",
+          "text": ["90 dan ke bawah"],
+          "type": "Legend"
+        },
+        {
+          "text": "Rujukan: medlineplus.gov",
+          "type": "reference",
+          "url": "https://medlineplus.gov/lab-tests/pulse-oximetry/"
+        },
+        {
+          "text": "*Ubat-ubatan tertentu atau jangkitan COVID-19 pada sesetengah individu mungkin menyebabkan bacaan yang lebih rendah.",
+          "type": "note"
+        }
+      ],
+      "bloodPressure": [
+        {
+          "text": "Apakah Selanjutnya?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau tekanan darah anda secara konsisten membantu mengesan tanda-tanda awal hipertensi atau hipotensi, yang boleh membawa kepada masalah serius jikalau tidak dikawal seperti penyakit jantung, angin ahmar, atau masalah buah pinggang.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengambil langkah proaktif untuk menjaga kesihatan anda dan mencegah komplikasi yang mengancam nyawa.",
+          "type": "text"
+        },
+        {
+          "text": "Panduan Keputusan: Sistolik/Diastolik",
+          "type": "chartTitle"
+        },
+        {
+          "result": "good",
+          "resultText": "Baik",
+          "text": [
+            "Sistolik",
+            "kurang daripada 130",
+            "dan",
+            "Diastolik",
+            "kurang daripada 85"
+          ],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "Sederhana",
+          "text": ["Sistolik 130 – 139", "dan/atau", "Diastolik 85 - 89"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "Lemah",
+          "text": [
+            "Sistolik 140 atau lebih",
+            "dan/atau",
+            "Diastolik 90 atau lebih"
+          ],
+          "type": "Legend"
+        },
+        {
+          "text": "myheart.org.sg",
+          "type": "reference",
+          "url": "https://www.myheart.org.sg/health/risk-factors/high-blood-pressure/"
+        },
+        {
+          "text": "*Merokok, minum minuman berkafein atau bersenam dalam masa 30 minit mungkin menyebabkan bacaan tidak tepat.",
+          "type": "note"
+        }
+      ],
+      "depressionLevels": [
+        {
+          "text": "Mengapakah ini penting?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau tahap kemurungan anda secara konsisten adalah penting, kerana kemurungan yang tidak dirawat boleh membawa kepada masalah kesihatan yang serius seperti gangguan kognitif, termasuk kehilangan ingatan, dan peningkatan risiko penyakit jantung.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengambil langkah proaktif untuk menangani kesihatan mental anda dan mencegah komplikasi.",
+          "type": "text"
+        },
+        {
+          "text": "Memahami keadaan emosi anda",
+          "type": "question"
+        },
+        {
+          "text": "la adalah normal untuk mengalami kesedihan, kemurungan, atau tiada motivasi dari semasa ke semasa. Cabaran hidup, tekanan, dan juga perubahan dalam rutin anda boleh menyebabkan perasaan sedih sementara.",
+          "type": "text"
+        },
+        {
+          "text": "Alat ini membantu anda memahami keadaan emosi anda. Namun, jika anda mengalami perasaan ini berterusan atau menjadi terlalu berat, atau jika ia mengganggu kehidupan harian anda, perbincangan dengan profesional kesihatan mental boleh memberikan kejelasan dan sokongan.",
+          "type": "text"
+        },
+        {
+          "text": "*Minum alkohol sebelum tidur, ubat-ubatan tertentu, atau alat perubatan (contohnya, alat pacu jantung) boleh menyebabkan bacaan yang tidak tepat.",
+          "type": "note"
+        }
+      ],
+      "heartRateText": {
+        "female": {
+          "18-25": [
+            {
+              "text": "Resting heart rate for women at age 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for women at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["42 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["69 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for women at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["45 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for women at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["48 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["70 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for women at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["50 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["69 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for women at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "good",
+              "text": ["52 - 68"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["69 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for women at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["40 - 69"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["70 - 84"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["85 and higher"],
+              "type": "Legend"
+            }
+          ]
+        },
+        "male": {
+          "18-25": [
+            {
+              "text": "Kadar denyutan jantung Ketika rehat bagi lelaki pada umur 18 - 25",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "26-35": [
+            {
+              "text": "Resting heart rate for men at age 26 - 35",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["44 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "36-45": [
+            {
+              "text": "Resting heart rate for men at age 36 - 45",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["47 - 66"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["67 - 82"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["83 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "46-55": [
+            {
+              "text": "Resting heart rate for men at age 46 - 55",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["49 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["68 - 83"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["84 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "56-65": [
+            {
+              "text": "Resting heart rate for men at age 56 - 65",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["51 - 67"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["68 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "65+": [
+            {
+              "text": "Resting heart rate for men at age 65+",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["52 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["66 - 79"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["80 and higher"],
+              "type": "Legend"
+            }
+          ],
+          "<18": [
+            {
+              "text": "Resting heart rate for men at age less than 18",
+              "type": "UnderLinedText"
+            },
+            {
+              "result": "good",
+              "resultText": "Baik",
+              "text": ["40 - 65"],
+              "type": "Legend"
+            },
+            {
+              "result": "mid",
+              "resultText": "Sederhana",
+              "text": ["66 - 81"],
+              "type": "Legend"
+            },
+            {
+              "result": "low",
+              "resultText": "Lemah",
+              "text": ["82 and higher"],
+              "type": "Legend"
+            }
+          ]
+        }
+      },
+      "restingHeartRate": [
+        {
+          "text": "Mengapakah ini penting?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau kadar denyutan jantung Ketika rehat anda secara konsisten adalah penting, kerana kadar yang tinggi boleh menandakan peningkatan risiko penyakit kardiovaskular dan masalah kesihatan lain.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengambil langkah proaktif untuk meningkatkan kesihatan jantung dan kecergasan anda.",
+          "type": "text"
+        },
+        {
+          "text": "Panduan Keputusan: bpm = denyutan jantung per minit",
+          "type": "chartTitle"
+        },
+        {
+          "text": "Kadar denyutan jantung Ketika rehat bagi lelaki pada umur 18 - 25",
+          "type": "UnderLinedText"
+        },
+        {
+          "result": "good",
+          "resultText": "Lemah",
+          "text": ["40 - 65"],
+          "type": "Legend"
+        },
+        {
+          "result": "mid",
+          "resultText": "Lemah",
+          "text": ["66 - 81"],
+          "type": "Legend"
+        },
+        {
+          "result": "low",
+          "resultText": "Lemah",
+          "text": ["82 and higher"],
+          "type": "Legend"
+        },
+        {
+          "text": "Rujukan: medicinenet.com",
+          "type": "reference",
+          "url": "https://www.medicinenet.com/what_is_a_good_resting_heart_rate_by_age/article.htm"
+        },
+        {
+          "text": "*Mengalami tekanan, minum minuman berkafein atau bersenam dalam masa 2 jam mungkin menyebabkan bacaan tidak tepat.",
+          "type": "note"
+        }
+      ],
+      "stressLevels": [
+        {
+          "text": "Mengapakah ini penting?",
+          "type": "question"
+        },
+        {
+          "text": "Memantau tahap tekanan anda secara konsisten adalah penting, kerana tekanan kronik boleh meningkatkan risiko penyakit jantung, kencing manis, dan disfungsi imun.",
+          "type": "text"
+        },
+        {
+          "text": "Dengan memantau, anda boleh mengimplementasikan strategi-strategi yang berkesan untuk menjaga kesihatan dan kesejahteraan anda.",
+          "type": "text"
+        },
+        {
+          "text": "Memahami keadaan emosi anda",
+          "type": "question"
+        },
+        {
+          "text": "la adalah normal untuk mengalami tekanan dari semasa ke semasa. Tekanan adalah tindak balas naluri semula jadi terhadap tuntutan kerja, keluarga, dan cabaran harian. Ia adalah sebahagian daripada menjadi manusia dan menghadapi tanggungjawab serta tekanan yang datang dengan kehidupan.",
+          "type": "text"
+        },
+        {
+          "text": "Alat ini membantu anda memahami keadaan emosi anda. Namun, jika anda mendapati tekanan menjadi terlalu berat atau menjejaskan kesihatan anda, sila mendapatkan khidmat daripada profesional. Berbincang dengan kaunselor atau ahli terapi boleh membantu anda mengembangkan strategi yang berkesan untuk menangani tekanan.",
+          "type": "text"
+        },
+        {
+          "text": "*Minum alkohol sebelum tidur, ubat-ubatan tertentu, atau alat perubatan (contohnya, alat pacu jantung) boleh menyebabkan bacaan yang tidak tepat.",
+          "type": "note"
+        }
+      ]
+    },
+    "legends": {
+      "good": "Baik",
+      "mid": "Sederhana",
+      "poor": "Lemah",
+      "title": "Petunjuk"
+    },
+    "loading": "Memuat data pasien...",
+    "metrics": {
+      "anxietyLevel": "Tahap Kebimbangan",
+      "bloodOxygenLevel": "Tahap Oksigen Dalam Darah",
+      "bloodPressure": "Tekanan Darah",
+      "depressionLevel": "Tahap Kemurungan",
+      "restingHeartRate": "Kadar Denyutan Jantung Ketika Rehat",
+      "stressLevel": "Tahap Tekanan"
+    },
+    "title": "Komposisi laporan anda"
+  },
+  "result": {
+    "autoCloseMessage": "Halaman ini akan ditutup secara automatik dalam {{seconds}}.",
+    "completionMessage": "Laporan peribadi anda kini tersedia untuk anda lihat dan ia penuh dengan petua dan cadangan yang berguna!",
+    "congratulations": "Tahniah kerana menyelesaikan pemeriksaan kesejahteraan anda!",
+    "exit": "Keluar",
+    "glow-festival-completion-message": "Laporan peribadi anda akan dipaparkan pada skrin seterusnya.\n Masukkan e-mel anda untuk mendapatkan salinan bersama tips dan petua kesejahteraan.",
+    "lets-see-my-result": "Jom lihat keputusan saya!",
+    "privacyMessage": "Sebaik sahaja halaman ini ditutup, data anda akan dipadamkan dari sistem kami (kecuali apabila anda menghantar e-mel anda untuk menyimpan laporan anda). Seperti yang kami janjikan, privasi anda adalah keutamaan kami.",
+    "qrInstructions": "Laporan anda dilindungi dengan baik. Imbas kod QR untuk dimuat dalam pelayar anda."
+  },
+  "sessionComplete": {
+    "imageAlt": "Ikon tong sampah menunjukkan pemadaman data",
+    "message": "Sesi telah selesai."
+  },
+  "sound-analysis": {
+    "low-volume-1": "Suara awak terlalu lemah.",
+    "low-volume-2": "Sila bercakap dengan lebih kuat atau mendekati tablet."
+  },
+  "voiceScanning": {
+    "alternate-title-1": "Seterusnya, kami hanya perlukan sampel suara pendek untuk mengukur nada, ton, kelantangan, dan kadar suara anda.",
+    "alternate-title-2": "Kami tidak menjejak atau menyimpan kandungan pertuturan anda.",
+    "alternate-title-3": "Untuk membantu anda bercakap secara normal, apa kata jawab soalan-soalan ini?",
+    "mainTitle": "Untuk langkah seterusnya, sila katakan apa-apa untuk kami mengimbas suara anda.",
+    "no-speech": {
+      "description": "Bolehkah anda cuba bersuara?",
+      "title": "Tiada suara dikesan."
+    },
+    "prompts": {
+      "daily": {
+        "description": "Mari bercakap tentang kehidupan harian anda, termasuk tabiat, rutin, dan apa-apa yang anda ingin perbaiki.",
+        "question": "Apa khabar?"
+      },
+      "travel": {
+        "description": "Mari bercakap tentang apa yang anda suka tentang melancong, termasuk jenis tempat yang anda suka lawati dan pengalaman yang anda sukai.",
+        "question": "Adakah anda suka melancong?"
+      }
+    },
+    "questionPrompt": "Bagaimana perasaan anda tentang diri anda?",
+    "questions": [
+      "Apakah hidangan kegemaran anda dan mengapa?",
+      "Bagaimanakah cuaca hari ini?",
+      "Apakah rancangan anda untuk hari ini?",
+      "Apakah destinasi percutian kegemaran anda dan mengapa?"
+    ],
+    "scanningText": "Mengimbas",
+    "startButton": "Mula Imbas",
+    "startInstruction": "Tekan \"Mula Imbas\" untuk imbasan suara selama 30 saat dan mula bercakap.",
+    "suggestionHeader": "Berikut adalah cadangan:",
+    "talkSuggestions": [
+      "Anda boleh bercakap tentang tabiat, rutin anda.",
+      "Perkara yang anda ingin ubah.",
+      "Perkara yang anda lakukan.",
+      "dan lain-lain"
+    ]
+  }
+}
