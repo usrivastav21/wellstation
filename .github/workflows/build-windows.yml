@@ -55,6 +55,14 @@ jobs:
           echo "${{ secrets.BACKEND_ENV_DEVELOPMENT }}" > .env.development
         shell: pwsh
 
+        # Step 4b: Create Frontend Environment Files
+      - name: Create Frontend Environment Files
+        working-directory: ./frontend
+        run: |
+          echo "${{ secrets.FRONTEND_ENV_PRODUCTION }}" > .env.production
+          echo "${{ secrets.FRONTEND_ENV_DEVELOPMENT }}" > .env.development
+        shell: pwsh
+
       # Step 5: Setup Node.js (required for frontend and electron)
       - name: Setup Node.js
         uses: actions/setup-node@v4
