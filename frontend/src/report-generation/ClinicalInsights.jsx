@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 import { useSetAtom } from "jotai";
 import { stepAtom } from "../atoms";
 import {
-  Center,
   Stack,
   Text,
   Button,
@@ -58,7 +57,21 @@ export const ClinicalInsights = () => {
   return (
     <Box h="100vh" bg="white" style={{ position: "relative" }}>
       {/* Top Right Exit Button */}
-      
+      <Button
+        variant="subtle"
+        color="gray"
+        size="sm"
+        onClick={handleExit}
+        style={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          zIndex: 10,
+        }}
+        leftSection={<img src={ExitWithoutArrowIcon} alt="Exit" width={16} height={16} />}
+      >
+        Exit
+      </Button>
 
       <Container size="xl" h="100%" py="sm">
         <Flex direction="column" align="center" justify="flex-start" h="100%" gap="lg" pt="md">
