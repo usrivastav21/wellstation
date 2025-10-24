@@ -226,7 +226,10 @@ def audioProcessingStart(file, identifier, is_trial=False):
             search_query = {
                 "user_Id": identifier,
             }
-            report = find_data(COLLECTIONS["USERS"], search_query, 1)[0]
+            report_list = find_data(COLLECTIONS["USERS"], search_query, 1)
+            if not report_list or len(report_list) == 0:
+                raise Exception(f"No report found for user_Id: {identifier}")
+            report = report_list[0]
             print("report", report)
             updated_data = {
                 "$set": {

@@ -580,6 +580,14 @@ def fetch_user_report(user_id):
 
         report = fetch_user_report_by_id(user_id)
 
+        if not report or len(report) == 0:
+            return jsonify(
+                {
+                    "status": "error",
+                    "message": f"No report found for user_id: {user_id}",
+                }
+            ), 404
+
         return jsonify(
             {
                 "status": "success",

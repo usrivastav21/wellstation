@@ -26,7 +26,28 @@ def get_ffmpeg_path():
         if os.path.exists(ffmpeg_path) and os.access(ffmpeg_path, os.X_OK):
             return ffmpeg_path
 
-    # Fallback to system ffmpeg
+    # Development mode: Check for system ffmpeg first
+    import shutil
+    system_ffmpeg = shutil.which("ffmpeg")
+    if system_ffmpeg:
+        return system_ffmpeg
+    
+    # Fallback: Check for ffmpeg in tools directory
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    backend_dir = os.path.dirname(os.path.dirname(current_dir))
+    tools_dir = os.path.join(backend_dir, "tools")
+    
+    # Check for ffmpeg (without .exe) in tools directory
+    ffmpeg_path = os.path.join(tools_dir, "ffmpeg")
+    if os.path.exists(ffmpeg_path) and os.access(ffmpeg_path, os.X_OK):
+        return ffmpeg_path
+    
+    # Check for ffmpeg.exe in tools directory (Windows only)
+    ffmpeg_exe_path = os.path.join(tools_dir, "ffmpeg.exe")
+    if os.path.exists(ffmpeg_exe_path):
+        return ffmpeg_exe_path
+
+    # Final fallback to system ffmpeg
     return "ffmpeg"
 
 

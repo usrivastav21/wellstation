@@ -102,7 +102,15 @@ const ConsentForm = () => {
               return;
             }
 
-            if (isRoleLoggedIn("user")) {
+            // OLD BEHAVIOR: Only checked for user role
+            // if (isRoleLoggedIn("user")) {
+            //   setStep("dashboard");
+            // } else {
+            //   navigate("/registration");
+            // }
+            
+            // NEW BEHAVIOR: Allow both user and admin to proceed to dashboard
+            if (isRoleLoggedIn("user") || isRoleLoggedIn("admin")) {
               setStep("dashboard");
             } else {
               navigate("/registration");

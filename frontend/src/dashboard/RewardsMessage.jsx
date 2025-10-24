@@ -8,7 +8,11 @@ import classes from "./RewardsMessage.module.css";
 import { reportIdAtom, trialIdAtom } from "../atoms";
 
 export const RewardsMessage = ({ onDismiss, onClose, opened }) => {
-  const user = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const user = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const user = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const email = user?.email ?? "";
   const reportId = useAtomValue(reportIdAtom);
   const trialId = useAtomValue(trialIdAtom);

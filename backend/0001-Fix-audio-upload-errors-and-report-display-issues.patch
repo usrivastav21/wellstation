@@ -1,0 +1,1378 @@
+From 810bda19a4840c9436e4724c563170b25a255d70 Mon Sep 17 00:00:00 2001
+From: usrivastav21 <usrivastav11@gmail.com>
+Date: Fri, 24 Oct 2025 16:58:03 +0530
+Subject: [PATCH] Fix audio upload errors and report display issues
+
+- Fix audio upload 500 error by correcting function parameters in media.py
+- Fix report fetching 404 error by uncommenting and registering media routes
+- Fix excessive console logging in FacialAnalysis component
+- Fix report display showing 'NA' for mental health scores
+- Add fallback data access for mental health scores
+- Add comprehensive debugging for data flow tracking
+- Register media blueprint with proper URL prefix
+- Handle both array and object API responses
+- Support both _id and id fields for backward compatibility
+---
+ backend/app/routes/__init__.py                |   3 +-
+ backend/app/routes/media.py                   |   9 +-
+ backend/app/services/media/media.py           |   5 +-
+ backend/env.development                       |   9 +
+ backend/env.production                        |  11 +
+ .../processingScripts/utils/ffmpeg_utils.py   |  23 +-
+ backend/run.py                                |   8 +
+ backend/start.sh                              |  13 +
+ frontend/package-lock.json                    |  15 -
+ frontend/src/AdminAwarePublicRoute.jsx        |  69 +++++
+ frontend/src/AdminLoginRoute.jsx              |  21 ++
+ frontend/src/App.tsx                          |  53 +++-
+ frontend/src/ProtectedRoute.tsx               |  17 +-
+ frontend/src/api-client/axios-instance.js     |  22 +-
+ frontend/src/dashboard/Dashboard.jsx          |  24 +-
+ frontend/src/dashboard/RewardsMessage.jsx     |   6 +-
+ frontend/src/login/AdminLogin.jsx             |  20 +-
+ frontend/src/login/Login.jsx                  | 170 -----------
+ frontend/src/login/UserLogin.jsx              |   2 +-
+ frontend/src/login/WellbeingInfo.jsx          | 274 ++++++++++++++++++
+ frontend/src/login/index.js                   |   2 +-
+ frontend/src/navigation/Header.jsx            |   8 +-
+ .../src/report-generation/ConsentForm.jsx     |  10 +-
+ .../src/report-generation/FacialAnalysis.jsx  |   6 +-
+ frontend/src/report-generation/Welcome.jsx    |  16 +-
+ .../facial-analysis/FacialAnalysis.jsx        |   8 +-
+ .../src/report-generation/result/Report.jsx   |  27 +-
+ .../src/report-generation/result/queries.js   |  14 +-
+ 28 files changed, 626 insertions(+), 239 deletions(-)
+ create mode 100644 backend/env.development
+ create mode 100644 backend/env.production
+ create mode 100755 backend/start.sh
+ create mode 100644 frontend/src/AdminAwarePublicRoute.jsx
+ create mode 100644 frontend/src/AdminLoginRoute.jsx
+ delete mode 100644 frontend/src/login/Login.jsx
+ create mode 100644 frontend/src/login/WellbeingInfo.jsx
+
+diff --git a/backend/app/routes/__init__.py b/backend/app/routes/__init__.py
+index c2aa5ac..15d4c4f 100644
+--- a/backend/app/routes/__init__.py
++++ b/backend/app/routes/__init__.py
+@@ -1,6 +1,7 @@
+ from .resources import resources_bp
++from .media import media_bp
+ 
+ 
+ def init_app(app):
+-
++    app.register_blueprint(media_bp, url_prefix='/api')
+     app.register_blueprint(resources_bp)
+diff --git a/backend/app/routes/media.py b/backend/app/routes/media.py
+index 4fa7604..dcd9b8c 100644
+--- a/backend/app/routes/media.py
++++ b/backend/app/routes/media.py
+@@ -50,7 +50,7 @@ def validate_file_request(file_key, file_type):
+     return True, file, metadata
+ 
+ 
+-# @media_bp.route('/video', methods=['POST'])
++@media_bp.route('/video', methods=['POST'])
+ def process_video():
+     is_valid, response_or_file, status_or_metadata = validate_file_request(
+         "videoFile", "video"
+@@ -70,7 +70,7 @@ def process_video():
+         return {"success": False, "error": f"Processing failed: {str(e)}"}, 500
+ 
+ 
+-# @media_bp.route('/audio', methods=['POST'])
++@media_bp.route('/audio', methods=['POST'])
+ def process_audio():
+     print("process_audio start")
+     # Validate request
+@@ -85,12 +85,13 @@ def process_audio():
+ 
+     # Process audio
+     try:
+-        result = audioProcessingStart(file, userId)
++        result = audioProcessingStart(file, userId, is_trial=False)
+         return {"success": True, "data": result}
+     except Exception as e:
+         return {"success": False, "error": f"Processing failed: {str(e)}"}, 500
+ 
+ 
++@media_bp.route('/fetch/report/<user_id>', methods=['GET'])
+ def fetch_user_report_by_id(user_id):
+     search_query = {
+         "user_Id": user_id,
+@@ -98,7 +99,7 @@ def fetch_user_report_by_id(user_id):
+     report = find_data(COLLECTIONS["USERS"], search_query, 1)
+ 
+     # Convert ObjectId to string if present in the report
+-    if report and "_id" in report[0]:
++    if report and len(report) > 0 and "_id" in report[0]:
+         report[0]["_id"] = str(report[0]["_id"])
+ 
+     return report
+diff --git a/backend/app/services/media/media.py b/backend/app/services/media/media.py
+index 7ddbd65..ac0b18d 100644
+--- a/backend/app/services/media/media.py
++++ b/backend/app/services/media/media.py
+@@ -226,7 +226,10 @@ def audioProcessingStart(file, identifier, is_trial=False):
+             search_query = {
+                 "user_Id": identifier,
+             }
+-            report = find_data(COLLECTIONS["USERS"], search_query, 1)[0]
++            report_list = find_data(COLLECTIONS["USERS"], search_query, 1)
++            if not report_list or len(report_list) == 0:
++                raise Exception(f"No report found for user_Id: {identifier}")
++            report = report_list[0]
+             print("report", report)
+             updated_data = {
+                 "$set": {
+diff --git a/backend/env.development b/backend/env.development
+new file mode 100644
+index 0000000..2c1b953
+--- /dev/null
++++ b/backend/env.development
+@@ -0,0 +1,9 @@
++FLASK_ENV=development
++MONGO_URI=mongodb+srv://wellstation:2LLDwM6SuSuKTVlv@cluster0.3sinvmf.mongodb.net/
++DATABASE_NAME=WellStationDev
++JWT_SECRET_KEY=dev-secret-key
++EMAIL=W3LLStation@universalhealth.asia
++# EMAIL=w3llstation@universalhealth.ai
++EMAIL_PASSWORD=nk5514@UH
++PORT=3001
++YOUTUBE_API_KEY=AIzaSyA6B-ThETRwVMn9LJ7mqfIBwMFWnBcp9PQ
+\ No newline at end of file
+diff --git a/backend/env.production b/backend/env.production
+new file mode 100644
+index 0000000..41bc9bf
+--- /dev/null
++++ b/backend/env.production
+@@ -0,0 +1,11 @@
++MONGO_URI=mongodb+srv://wellstation:2LLDwM6SuSuKTVlv@cluster0.3sinvmf.mongodb.net/
++# DATABASE_NAME=WellStation
++DATABASE_NAME=WellStation
++FLASK_ENV=production
++# EMAIL=wellstation@universalhealth.asia
++EMAIL=W3LLStation@universalhealth.asia
++# EMAIL=w3llstation@universalhealth.ai
++EMAIL_PASSWORD=nk5514@UH
++JWT_SECRET_KEY=prod-secret-key
++PORT=5000
++YOUTUBE_API_KEY=AIzaSyA6B-ThETRwVMn9LJ7mqfIBwMFWnBcp9PQ
+\ No newline at end of file
+diff --git a/backend/processingScripts/utils/ffmpeg_utils.py b/backend/processingScripts/utils/ffmpeg_utils.py
+index 96968cc..188b804 100644
+--- a/backend/processingScripts/utils/ffmpeg_utils.py
++++ b/backend/processingScripts/utils/ffmpeg_utils.py
+@@ -26,7 +26,28 @@ def get_ffmpeg_path():
+         if os.path.exists(ffmpeg_path) and os.access(ffmpeg_path, os.X_OK):
+             return ffmpeg_path
+ 
+-    # Fallback to system ffmpeg
++    # Development mode: Check for system ffmpeg first
++    import shutil
++    system_ffmpeg = shutil.which("ffmpeg")
++    if system_ffmpeg:
++        return system_ffmpeg
++    
++    # Fallback: Check for ffmpeg in tools directory
++    current_dir = os.path.dirname(os.path.abspath(__file__))
++    backend_dir = os.path.dirname(os.path.dirname(current_dir))
++    tools_dir = os.path.join(backend_dir, "tools")
++    
++    # Check for ffmpeg (without .exe) in tools directory
++    ffmpeg_path = os.path.join(tools_dir, "ffmpeg")
++    if os.path.exists(ffmpeg_path) and os.access(ffmpeg_path, os.X_OK):
++        return ffmpeg_path
++    
++    # Check for ffmpeg.exe in tools directory (Windows only)
++    ffmpeg_exe_path = os.path.join(tools_dir, "ffmpeg.exe")
++    if os.path.exists(ffmpeg_exe_path):
++        return ffmpeg_exe_path
++
++    # Final fallback to system ffmpeg
+     return "ffmpeg"
+ 
+ 
+diff --git a/backend/run.py b/backend/run.py
+index 5ac7fe0..6921ec7 100644
+--- a/backend/run.py
++++ b/backend/run.py
+@@ -580,6 +580,14 @@ def fetch_user_report(user_id):
+ 
+         report = fetch_user_report_by_id(user_id)
+ 
++        if not report or len(report) == 0:
++            return jsonify(
++                {
++                    "status": "error",
++                    "message": f"No report found for user_id: {user_id}",
++                }
++            ), 404
++
+         return jsonify(
+             {
+                 "status": "success",
+diff --git a/backend/start.sh b/backend/start.sh
+new file mode 100755
+index 0000000..6e5a4c5
+--- /dev/null
++++ b/backend/start.sh
+@@ -0,0 +1,13 @@
++#!/bin/bash
++# WellStation Backend Startup Script
++
++echo "Starting WellStation Backend..."
++echo "Activating virtual environment..."
++
++# Activate virtual environment
++source venv/bin/activate
++
++# Run the application
++echo "Running Flask application..."
++python run.py
++
+diff --git a/frontend/package-lock.json b/frontend/package-lock.json
+index d548723..54d8884 100644
+--- a/frontend/package-lock.json
++++ b/frontend/package-lock.json
+@@ -9718,21 +9718,6 @@
+         }
+       }
+     },
+-    "node_modules/yaml": {
+-      "version": "2.8.1",
+-      "resolved": "https://registry.npmjs.org/yaml/-/yaml-2.8.1.tgz",
+-      "integrity": "sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==",
+-      "dev": true,
+-      "license": "ISC",
+-      "optional": true,
+-      "peer": true,
+-      "bin": {
+-        "yaml": "bin.mjs"
+-      },
+-      "engines": {
+-        "node": ">= 14.6"
+-      }
+-    },
+     "node_modules/yauzl": {
+       "version": "2.10.0",
+       "resolved": "https://registry.npmjs.org/yauzl/-/yauzl-2.10.0.tgz",
+diff --git a/frontend/src/AdminAwarePublicRoute.jsx b/frontend/src/AdminAwarePublicRoute.jsx
+new file mode 100644
+index 0000000..0fe7e0d
+--- /dev/null
++++ b/frontend/src/AdminAwarePublicRoute.jsx
+@@ -0,0 +1,69 @@
++import { useNavigate } from "react-router";
++import { useEffect, useState } from "react";
++import { isRoleLoggedIn } from "./api-client";
++import { Loader, Center } from "@mantine/core";
++
++/**
++ * A public route for /auth and /auth/login pages
++ * - Regular users who are logged in get redirected to booth
++ * - Admin users can view the page (Login.jsx will show "Proceed To Scan" button)
++ * - Non-logged in users can view the page normally
++ */
++export const AdminAwarePublicRoute = ({
++  children,
++  redirectTo = "/booth",
++  fallback = null,
++}) => {
++  const navigate = useNavigate();
++  const [isReady, setIsReady] = useState(false);
++  const [isLoading, setIsLoading] = useState(true);
++
++  useEffect(() => {
++    const checkAuth = () => {
++      try {
++        // OLD BEHAVIOR: Redirected admin users to booth immediately
++        // const isAdminLoggedIn = isRoleLoggedIn('admin');
++        // if (isAdminLoggedIn) {
++        //   navigate(redirectTo);
++        //   return;
++        // }
++        
++        // NEW BEHAVIOR: Allow admin to see the page (Login.jsx handles showing "Proceed To Scan")
++        // Only redirect regular users who are logged in
++        
++        const isUserLoggedIn = isRoleLoggedIn('user');
++        
++        if (isUserLoggedIn) {
++          // Regular user is logged in, redirect to booth
++          navigate(redirectTo);
++          return;
++        }
++
++        // Admin or not logged in - show the page
++        setIsReady(true);
++      } catch (error) {
++        console.error("Authentication check failed:", error);
++        setIsReady(true);
++      } finally {
++        setIsLoading(false);
++      }
++    };
++
++    checkAuth();
++  }, [navigate, redirectTo]);
++
++  if (isLoading) {
++    return (
++      fallback || (
++        <Center h="100%">
++          <Loader size="sm" />
++        </Center>
++      )
++    );
++  }
++
++  if (!isReady) return null;
++
++  return children;
++};
++
+diff --git a/frontend/src/AdminLoginRoute.jsx b/frontend/src/AdminLoginRoute.jsx
+new file mode 100644
+index 0000000..ec7e315
+--- /dev/null
++++ b/frontend/src/AdminLoginRoute.jsx
+@@ -0,0 +1,21 @@
++import { Navigate } from "react-router";
++import { isRoleLoggedIn } from "./api-client";
++
++/**
++ * Route wrapper for admin login page
++ * Redirects to /booth if admin is already logged in
++ * This prevents admins from seeing the second login screen after admin login
++ */
++export const AdminLoginRoute = ({ children }) => {
++  // Check if admin is logged in
++  const isAdminLoggedIn = isRoleLoggedIn('admin');
++  
++  // If admin is logged in, redirect to booth (bypass second login)
++  if (isAdminLoggedIn) {
++    return <Navigate to="/booth" replace />;
++  }
++
++  // If not logged in, show the admin login page
++  return children;
++};
++
+diff --git a/frontend/src/App.tsx b/frontend/src/App.tsx
+index f73748a..f19da03 100644
+--- a/frontend/src/App.tsx
++++ b/frontend/src/App.tsx
+@@ -19,7 +19,7 @@ import { Error } from "./error";
+ import Layout from "./Layout";
+ import {
+   AdminLogin,
+-  Login,
++  WellbeingInfo, // Renamed from Login - shows wellbeing information page
+   ChangePin,
+   ResetPin,
+   ResetPinSuccess,
+@@ -27,6 +27,8 @@ import {
+ } from "./login";
+ import { ProtectedRoute } from "./ProtectedRoute";
+ import { PublicRoute } from "./PublicRoute";
++import { AdminAwarePublicRoute } from "./AdminAwarePublicRoute";
++import { AdminLoginRoute } from "./AdminLoginRoute";
+ import { Registration } from "./registration";
+ import { ReportGenerationFlow } from "./report-generation";
+ import { Resources } from "./resources/Resources";
+@@ -149,7 +151,13 @@ function App() {
+                 <Route
+                   path="/booth"
+                   element={
+-                    <ProtectedRoute>
++                    // OLD BEHAVIOR: Only allowed user role
++                    // <ProtectedRoute>
++                    //   <ReportGenerationFlow />
++                    // </ProtectedRoute>
++                    
++                    // NEW BEHAVIOR: Allow both user and admin to access booth
++                    <ProtectedRoute allowAdminAccess={true}>
+                       <ReportGenerationFlow />
+                     </ProtectedRoute>
+                   }
+@@ -157,25 +165,50 @@ function App() {
+                 <Route
+                   path="/admin-login"
+                   element={
+-                    <PublicRoute>
++                    // OLD BEHAVIOR: PublicRoute only checked "user" role by default
++                    // <PublicRoute>
++                    //   <AdminLogin />
++                    // </PublicRoute>
++                    
++                    // NEW BEHAVIOR: Use AdminLoginRoute that redirects admin to /booth
++                    <AdminLoginRoute>
+                       <AdminLogin />
+-                    </PublicRoute>
++                    </AdminLoginRoute>
+                   }
+                 />
+                 <Route
+-                  path="/auth"
++                  path="/wellbeing-info"
+                   element={
+-                    <PublicRoute>
+-                      <Login />
+-                    </PublicRoute>
++                    // OLD BEHAVIOR: Only checked for user role - required second login
++                    // <PublicRoute>
++                    //   <WellbeingInfo />
++                    // </PublicRoute>
++                    
++                    // NEW BEHAVIOR: Show wellbeing info page after welcome screen
++                    // For admin: shows only "Proceed to Scan" button
++                    // For regular users: shows login/registration options
++                    <AdminAwarePublicRoute>
++                      <WellbeingInfo />
++                    </AdminAwarePublicRoute>
+                   }
+                 />
++                {/* Keep /auth as redirect for backward compatibility */}
++                <Route
++                  path="/auth"
++                  element={<Navigate to="/wellbeing-info" replace />}
++                />
+                 <Route
+                   path="/auth/login"
+                   element={
+-                    <PublicRoute>
++                    // OLD BEHAVIOR: Only checked for user role - required second login
++                    // <PublicRoute>
++                    //   <UserLogin />
++                    // </PublicRoute>
++                    
++                    // NEW BEHAVIOR: Skip second login for admin - go directly to booth
++                    <AdminAwarePublicRoute>
+                       <UserLogin />
+-                    </PublicRoute>
++                    </AdminAwarePublicRoute>
+                   }
+                 />
+                 <Route
+diff --git a/frontend/src/ProtectedRoute.tsx b/frontend/src/ProtectedRoute.tsx
+index cbc267d..e4831df 100644
+--- a/frontend/src/ProtectedRoute.tsx
++++ b/frontend/src/ProtectedRoute.tsx
+@@ -8,14 +8,16 @@ import { stepAtom, trialIdAtom } from "./atoms";
+ 
+ export const ProtectedRoute = ({
+   children,
+-  redirectTo = "/auth",
++  redirectTo = "/wellbeing-info",
+   role = "user",
+   fallback = null,
++  allowAdminAccess = false, // NEW: Allow admin to access user-protected routes
+ }: {
+   children: React.ReactNode;
+   redirectTo?: string;
+   role?: Role;
+   fallback?: React.ReactNode;
++  allowAdminAccess?: boolean; // NEW: Allow admin to access user-protected routes
+ }) => {
+   const navigate = useNavigate();
+   const [isReady, setIsReady] = useState(false);
+@@ -28,7 +30,16 @@ export const ProtectedRoute = ({
+   useEffect(() => {
+     const checkAuth = () => {
+       try {
+-        const isLoggedIn = isRoleLoggedIn(role);
++        // OLD BEHAVIOR: Only check for specified role
++        // const isLoggedIn = isRoleLoggedIn(role);
++        
++        // NEW BEHAVIOR: Check for specified role OR admin if allowAdminAccess is true
++        let isLoggedIn = isRoleLoggedIn(role);
++        
++        // If not logged in as the specified role but allowAdminAccess is true, check if admin is logged in
++        if (!isLoggedIn && allowAdminAccess) {
++          isLoggedIn = isRoleLoggedIn('admin');
++        }
+ 
+         if (
+           !isLoggedIn &&
+@@ -51,7 +62,7 @@ export const ProtectedRoute = ({
+     };
+ 
+     checkAuth();
+-  }, [navigate, redirectTo, role, step]);
++  }, [navigate, redirectTo, role, step, allowAdminAccess]);
+ 
+   if (isLoading) {
+     return (
+diff --git a/frontend/src/api-client/axios-instance.js b/frontend/src/api-client/axios-instance.js
+index 02a8424..4433d37 100644
+--- a/frontend/src/api-client/axios-instance.js
++++ b/frontend/src/api-client/axios-instance.js
+@@ -18,7 +18,15 @@ const createAxiosInstance = () => {
+ 
+   instance.interceptors.request.use(
+     (config) => {
+-      const currentRole = getCurrentRoleData("user");
++      // OLD BEHAVIOR: Only check for user role
++      // const currentRole = getCurrentRoleData("user");
++      
++      // NEW BEHAVIOR: Check for both user and admin roles
++      let currentRole = getCurrentRoleData("user");
++      if (!currentRole) {
++        currentRole = getCurrentRoleData("admin");
++      }
++      
+       let token = null;
+       if (currentRole?.role) {
+         token = getAuthToken(currentRole.role);
+@@ -31,11 +39,13 @@ const createAxiosInstance = () => {
+       if (token) {
+         // Check if token exists and is not expired
+         if (isTokenExpired(token)) {
+-          // if (isTokenExpired(token)) {
+-          //   // Token is expired, clear tokens and redirect to login
+-          removeAuthToken("user");
+-          //   // localStorage.removeItem("boothLoggedInUser");
+-          //   // localStorage.removeItem("boothVenue");
++          // Token is expired, clear tokens and redirect
++          if (currentRole?.role === "admin") {
++            removeAuthToken("admin");
++          } else {
++            removeAuthToken("user");
++          }
++          
+           if (window.electron) {
+             window.location.hash = "#/booth";
+           } else {
+diff --git a/frontend/src/dashboard/Dashboard.jsx b/frontend/src/dashboard/Dashboard.jsx
+index 09d82ef..5305cb2 100644
+--- a/frontend/src/dashboard/Dashboard.jsx
++++ b/frontend/src/dashboard/Dashboard.jsx
+@@ -273,7 +273,11 @@ const calculateAverage = (reports, levelKey = "") => {
+ };
+ 
+ const WeekPanelContent = ({ label, levelKey }) => {
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const [weekStartDate, setWeekStartDate] = useState(null);
+   const [weekEndDate, setWeekEndDate] = useState(null);
+ 
+@@ -381,7 +385,11 @@ const WeekPanelContent = ({ label, levelKey }) => {
+ };
+ 
+ const MonthPanelContent = ({ label, levelKey }) => {
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const [month, setMonth] = useState(() => new Date());
+ 
+   const monthReports = useMonthReportsWithIntervals({
+@@ -466,7 +474,11 @@ const MonthPanelContent = ({ label, levelKey }) => {
+ };
+ 
+ const YearPanelContent = ({ label, levelKey }) => {
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const [year, setYear] = useState(() => new Date());
+ 
+   const yearReports = useYearReports({
+@@ -650,7 +662,11 @@ export const Dashboard = () => {
+   const gender = useAtomValue(selectedGenderAtom);
+   const reportId = useAtomValue(reportIdAtom);
+   const trialId = useAtomValue(trialIdAtom);
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const setReportId = useSetAtom(reportIdAtom);
+   const [activeTab, setActiveTab] = useState("overall");
+   const [activeStressTab, setActiveStressTab] = useState("week");
+diff --git a/frontend/src/dashboard/RewardsMessage.jsx b/frontend/src/dashboard/RewardsMessage.jsx
+index 2b4145d..9f93823 100644
+--- a/frontend/src/dashboard/RewardsMessage.jsx
++++ b/frontend/src/dashboard/RewardsMessage.jsx
+@@ -8,7 +8,11 @@ import classes from "./RewardsMessage.module.css";
+ import { reportIdAtom, trialIdAtom } from "../atoms";
+ 
+ export const RewardsMessage = ({ onDismiss, onClose, opened }) => {
+-  const user = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const user = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const user = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const email = user?.email ?? "";
+   const reportId = useAtomValue(reportIdAtom);
+   const trialId = useAtomValue(trialIdAtom);
+diff --git a/frontend/src/login/AdminLogin.jsx b/frontend/src/login/AdminLogin.jsx
+index 37254c0..5b49372 100644
+--- a/frontend/src/login/AdminLogin.jsx
++++ b/frontend/src/login/AdminLogin.jsx
+@@ -13,11 +13,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
+ import { useAtomValue, useSetAtom } from "jotai";
+ import { useState } from "react";
+ import { Controller, useForm } from "react-hook-form";
+-import { Navigate } from "react-router";
++import { Navigate, useNavigate } from "react-router";
+ import { z } from "zod/v4";
+ 
+ import { isRoleLoggedIn } from "../api-client/auth";
+-import { boothVenueAtom, loggedInUserAtom } from "../atoms";
++import { boothVenueAtom, loggedInUserAtom, stepAtom } from "../atoms";
+ import { UPDATED_TAB_SIZES } from "../atoms/sd";
+ import { Button } from "../design-system/button";
+ import { TextInput } from "../form-inputs";
+@@ -30,6 +30,8 @@ export const AdminLogin = () => {
+   const setLoggedInUser = useSetAtom(loggedInUserAtom);
+   const setBoothVenue = useSetAtom(boothVenueAtom);
+   const loggedInUser = useAtomValue(loggedInUserAtom);
++  const navigate = useNavigate();
++  const setStep = useSetAtom(stepAtom);
+ 
+   const SIZES = UPDATED_TAB_SIZES;
+ 
+@@ -71,6 +73,10 @@ export const AdminLogin = () => {
+       localStorage.setItem("boothVenue", data.user?.user_name);
+       setLoggedInUser(data.user);
+       console.log("data", data);
++      
++      // NEW BEHAVIOR: After admin login, go to welcome screen (Press Anywhere To Proceed)
++      setStep("welcome");
++      navigate("/booth");
+     },
+   });
+ 
+@@ -111,8 +117,16 @@ export const AdminLogin = () => {
+     loggedInUser,
+   });
+ 
++  // COMMENTED OUT: Old behavior - redirect to /auth for second login
++  // if (isRoleLoggedIn("admin")) {
++  //   return <Navigate to="/auth" replace />;
++  // }
++
++  // NEW BEHAVIOR: Skip second login for admin - go directly to welcome screen at booth
++  // Note: The actual navigation happens in the login onSuccess callback above
++  // This check is for page refresh scenarios
+   if (isRoleLoggedIn("admin")) {
+-    return <Navigate to="/auth" replace />;
++    return <Navigate to="/booth" replace />;
+   }
+ 
+   return (
+diff --git a/frontend/src/login/Login.jsx b/frontend/src/login/Login.jsx
+deleted file mode 100644
+index 121086b..0000000
+--- a/frontend/src/login/Login.jsx
++++ /dev/null
+@@ -1,170 +0,0 @@
+-import {
+-  Box,
+-  Button,
+-  Container,
+-  Group,
+-  Image,
+-  Stack,
+-  Text,
+-  Title,
+-  rem,
+-} from "@mantine/core";
+-import { useSetAtom } from "jotai";
+-import { Link, useNavigate } from "react-router";
+-import { BoothWithSmile, Coins } from "../assets";
+-import { stepAtom } from "../atoms";
+-import classes from "./Login.module.css";
+-
+-export const Login = () => {
+-  const navigate = useNavigate();
+-  const setStep = useSetAtom(stepAtom);
+-
+-  return (
+-    <Box>
+-      <Stack gap={0} mb={64}>
+-        <Title ta="center" fz="4xl" mb={48}>
+-          Your Daily Wellbeing Check-In!
+-        </Title>
+-        <Text fz="xl">
+-          Take a moment for yourself today — your mind and body will thank you.
+-          This wellbeing screening booth is here to support your health and
+-          performance, every single day.
+-        </Text>
+-      </Stack>
+-
+-      <Stack>
+-        <Group gap={48} wrap="nowrap">
+-          <Group maw={724} wrap="nowrap">
+-            <Image src={BoothWithSmile} w={"212px"} h={"304px"} />
+-            <Stack>
+-              <Text fz={"xl"}>What is this booth about?</Text>
+-              <Text fz="xl">
+-                You can use W3LL Station to check in on your physical and mental
+-                wellbeing. In just{" "}
+-                <Text fz="xl" fw={"bold"} c="#f53d67" component="span">
+-                  60 seconds
+-                </Text>
+-                , you’ll receive a personalised snapshot of how you’re{" "}
+-                <Text fz={"xl"} fw={"bold"} c="#f53d67" component="span">
+-                  feeling
+-                </Text>
+-                .
+-              </Text>
+-              <Text fz={"xl"}>You can share the result too!</Text>
+-            </Stack>
+-          </Group>
+-
+-          <Stack maw={rem(968)}>
+-            <Title ta="center">Get Rewarded for Showing Up!</Title>
+-
+-            <Stack
+-              pos={"relative"}
+-              bdrs={"xl"}
+-              bg={"#fae0c2"}
+-              px={64}
+-              h={294}
+-              className={classes.rewardContainer}
+-              gap={24}
+-            >
+-              <Text fz="xl" ta="center" lh={1.2} mt={54}>
+-                Every daily scan{" "}
+-                <Text component="span" lh={1.2} fz="xl" ff="PoetsonOne">
+-                  earns you points
+-                </Text>
+-                — just for taking care of yourself.
+-              </Text>
+-              <Text lh={1.2} fz="xl" ta="center" fw={500}>
+-                Soon, you can redeem Lenovo rewards!
+-              </Text>
+-
+-              <Box pos={"absolute"} bottom={0} left={0} right={0}>
+-                <Image w={"100%"} objectFit={"fill"} src={Coins} />
+-              </Box>
+-            </Stack>
+-          </Stack>
+-        </Group>
+-
+-        <Container size={744} w={744}>
+-          <Stack gap={48} mt={64}>
+-            <Button
+-              component={Link}
+-              to={"/auth/login"}
+-              variant="brand-filled"
+-              size="xxl"
+-              fullWidth
+-            >
+-              Login
+-            </Button>
+-            <Group wrap="nowrap">
+-              <Button
+-                variant="white"
+-                onClick={() => {
+-                  navigate("/booth");
+-                  setStep("consentForm");
+-                }}
+-                fullWidth
+-                miw="fit-content"
+-                size="xxl"
+-                h="max-content"
+-                styles={{
+-                  label: {
+-                    whiteSpace: "normal",
+-                    flexDirection: "column",
+-                  },
+-                }}
+-              >
+-                Registration
+-                <br />
+-                <Text component="span" fz="2xl" c="inherit" lh={1.1}>
+-                  (for first time users)
+-                </Text>
+-              </Button>
+-              <Button
+-                variant="white"
+-                size="xxl"
+-                fullWidth
+-                fs={"italic"}
+-                onClick={() => {
+-                  setStep("consentForm");
+-                  navigate("/booth", {
+-                    state: {
+-                      isTrial: true,
+-                    },
+-                  });
+-                }}
+-              >
+-                Try me first!
+-              </Button>
+-            </Group>
+-          </Stack>
+-        </Container>
+-      </Stack>
+-    </Box>
+-  );
+-};
+-{
+-  /* <Header
+-isHeaderVisible={true}
+-handleClickExit={() => {
+-  setStep("welcome");
+-  navigate("/booth");
+-}}
+-/> */
+-}
+-
+-{
+-  /* <Button
+-as={Link}
+-to={"/auth/login"}
+-variant="primary"
+-w={"100%"}
+-size="xl"
+-fontWeight={"bold"}
+-boxShadow={
+-  "8px 12px 20px 0px var(--chakra-colors-shadow-100), var(--chakra-shadows-primary-border-shadow-md)"
+-}
+->
+-Login
+-</Button>
+-*/
+-}
+diff --git a/frontend/src/login/UserLogin.jsx b/frontend/src/login/UserLogin.jsx
+index 550de76..d667151 100644
+--- a/frontend/src/login/UserLogin.jsx
++++ b/frontend/src/login/UserLogin.jsx
+@@ -76,7 +76,7 @@ export const UserLogin = () => {
+     onError: (error) => {
+       console.log(error);
+       if (error.response.status === 403) {
+-        navigate("/auth");
++        navigate("/wellbeing-info");
+       }
+       if (error.response.status === 401) {
+         setApiError("Invalid email or pin. Please try again.");
+diff --git a/frontend/src/login/WellbeingInfo.jsx b/frontend/src/login/WellbeingInfo.jsx
+new file mode 100644
+index 0000000..d9dd3aa
+--- /dev/null
++++ b/frontend/src/login/WellbeingInfo.jsx
+@@ -0,0 +1,274 @@
++import {
++  Box,
++  Button,
++  Container,
++  Group,
++  Image,
++  Stack,
++  Text,
++  Title,
++  rem,
++} from "@mantine/core";
++import { useSetAtom } from "jotai";
++import { Link, useNavigate } from "react-router";
++import { useState, useEffect } from "react";
++import { BoothWithSmile, Coins } from "../assets";
++import { stepAtom, reportIdAtom } from "../atoms";
++import { isRoleLoggedIn } from "../api-client";
++import { generateReportId } from "../utils/generateUserId";
++import classes from "./Login.module.css";
++
++export const WellbeingInfo = () => {
++  const navigate = useNavigate();
++  const setStep = useSetAtom(stepAtom);
++  const setReportId = useSetAtom(reportIdAtom);
++  
++  // Check if admin is logged in - use state to make it reactive
++  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
++  
++  useEffect(() => {
++    // Check auth state when component mounts or when coming back to this page
++    const checkAdminAuth = () => {
++      const adminLoggedIn = isRoleLoggedIn("admin");
++      setIsAdminLoggedIn(adminLoggedIn);
++    };
++    
++    checkAdminAuth();
++    
++    // Optional: Listen to storage events to detect auth changes
++    window.addEventListener('storage', checkAdminAuth);
++    
++    return () => {
++      window.removeEventListener('storage', checkAdminAuth);
++    };
++  }, []);
++
++  return (
++    <Box>
++      <Stack gap={0} mb={64}>
++        <Title ta="center" fz="4xl" mb={48}>
++          Your Daily Wellbeing Check-In!
++        </Title>
++        <Text fz="xl">
++          Take a moment for yourself today — your mind and body will thank you.
++          This wellbeing screening booth is here to support your health and
++          performance, every single day.
++        </Text>
++      </Stack>
++
++      <Stack align="center">
++        {/* Centered booth information section */}
++        <Group maw={724} wrap="nowrap" justify="center">
++          <Image src={BoothWithSmile} w={"212px"} h={"304px"} />
++          <Stack>
++            <Text fz={"xl"}>What is this booth about?</Text>
++            <Text fz="xl">
++              You can use W3LL Station to check in on your physical and mental
++              wellbeing. In just{" "}
++              <Text fz="xl" fw={"bold"} c="#f53d67" component="span">
++                60 seconds
++              </Text>
++              , you'll receive a personalised snapshot of how you're{" "}
++              <Text fz={"xl"} fw={"bold"} c="#f53d67" component="span">
++                feeling
++              </Text>
++              .
++            </Text>
++            <Text fz={"xl"}>You can share the result too!</Text>
++          </Stack>
++        </Group>
++
++        {/* Removed rewards section - commented out for reference */}
++        {/* <Stack maw={rem(968)}>
++          <Title ta="center">Get Rewarded for Showing Up!</Title>
++
++          <Stack
++            pos={"relative"}
++            bdrs={"xl"}
++            bg={"#fae0c2"}
++            px={64}
++            h={294}
++            className={classes.rewardContainer}
++            gap={24}
++          >
++            <Text fz="xl" ta="center" lh={1.2} mt={54}>
++              Every daily scan{" "}
++              <Text component="span" lh={1.2} fz="xl" ff="PoetsonOne">
++                earns you points
++              </Text>
++              — just for taking care of yourself.
++            </Text>
++            <Text lh={1.2} fz="xl" ta="center" fw={500}>
++              Soon, you can redeem Lenovo rewards!
++            </Text>
++
++            <Box pos={"absolute"} bottom={0} left={0} right={0}>
++              <Image w={"100%"} objectFit={"fill"} src={Coins} />
++            </Box>
++          </Stack>
++        </Stack> */}
++
++        <Container size={744} w={744}>
++          <Stack gap={48} mt={64}>
++            {/* OLD BEHAVIOR: Always show login/registration buttons */}
++            {/* <Button
++              component={Link}
++              to={"/auth/login"}
++              variant="brand-filled"
++              size="xxl"
++              fullWidth
++            >
++              Login
++            </Button>
++            <Group wrap="nowrap">
++              <Button
++                variant="white"
++                onClick={() => {
++                  navigate("/booth");
++                  setStep("consentForm");
++                }}
++                fullWidth
++                miw="fit-content"
++                size="xxl"
++                h="max-content"
++                styles={{
++                  label: {
++                    whiteSpace: "normal",
++                    flexDirection: "column",
++                  },
++                }}
++              >
++                Registration
++                <br />
++                <Text component="span" fz="2xl" c="inherit" lh={1.1}>
++                  (for first time users)
++                </Text>
++              </Button>
++              <Button
++                variant="white"
++                size="xxl"
++                fullWidth
++                fs={"italic"}
++                onClick={() => {
++                  setStep("consentForm");
++                  navigate("/booth", {
++                    state: {
++                      isTrial: true,
++                    },
++                  });
++                }}
++              >
++                Try me first!
++              </Button>
++            </Group> */}
++            
++            {/* NEW BEHAVIOR: Show "Proceed To Scan" button if admin is logged in */}
++            {isAdminLoggedIn ? (
++              <Button
++                variant="brand-filled"
++                size="xxl"
++                fullWidth
++                onClick={() => {
++                  // OLD: Admin went to dashboard
++                  // setStep("dashboard");
++                  
++                  // NEW: Admin goes directly to facial analysis (scanning page)
++                  // Generate reportId before starting the scan
++                  setReportId(generateReportId());
++                  setStep("facialAnalysis");
++                  navigate("/booth");
++                }}
++              >
++                Proceed To Scan
++              </Button>
++            ) : (
++              <>
++                <Button
++                  component={Link}
++                  to={"/auth/login"}
++                  variant="brand-filled"
++                  size="xxl"
++                  fullWidth
++                >
++                  Login
++                </Button>
++                <Group wrap="nowrap">
++                  <Button
++                    variant="white"
++                    onClick={() => {
++                      navigate("/booth");
++                      setStep("consentForm");
++                    }}
++                    fullWidth
++                    miw="fit-content"
++                    size="xxl"
++                    h="max-content"
++                    styles={{
++                      label: {
++                        whiteSpace: "normal",
++                        flexDirection: "column",
++                      },
++                    }}
++                  >
++                    Registration
++                    <br />
++                    <Text component="span" fz="2xl" c="inherit" lh={1.1}>
++                      (for first time users)
++                    </Text>
++                  </Button>
++                  <Button
++                    variant="white"
++                    size="xxl"
++                    fullWidth
++                    fs={"italic"}
++                    onClick={() => {
++                      setStep("consentForm");
++                      navigate("/booth", {
++                        state: {
++                          isTrial: true,
++                        },
++                      });
++                    }}
++                  >
++                    Try me first!
++                  </Button>
++                </Group>
++              </>
++            )}
++          </Stack>
++        </Container>
++      </Stack>
++    </Box>
++  );
++};
++
++// OLD COMPONENT NAME: Login
++// RENAMED TO: WellbeingInfo (more descriptive for wellbeing information page)
++
++{
++  /* <Header
++isHeaderVisible={true}
++handleClickExit={() => {
++  setStep("welcome");
++  navigate("/booth");
++}}
++/> */
++}
++
++{
++  /* <Button
++as={Link}
++to={"/auth/login"}
++variant="primary"
++w={"100%"}
++size="xl"
++fontWeight={"bold"}
++boxShadow={
++  "8px 12px 20px 0px var(--chakra-colors-shadow-100), var(--chakra-shadows-primary-border-shadow-md)"
++}
++>
++Login
++</Button>
++*/
++}
++
+diff --git a/frontend/src/login/index.js b/frontend/src/login/index.js
+index e2f292c..21eb2a6 100644
+--- a/frontend/src/login/index.js
++++ b/frontend/src/login/index.js
+@@ -1,5 +1,5 @@
+ export * from "./AdminLogin.jsx";
+-export * from "./Login.jsx";
++export * from "./WellbeingInfo.jsx"; // Wellbeing information page (renamed from Login.jsx)
+ export * from "./useLogin.js";
+ export * from "./UserLogin.jsx";
+ export * from "./reset-pin";
+diff --git a/frontend/src/navigation/Header.jsx b/frontend/src/navigation/Header.jsx
+index 7772da4..26edb90 100644
+--- a/frontend/src/navigation/Header.jsx
++++ b/frontend/src/navigation/Header.jsx
+@@ -84,7 +84,11 @@ export const Header = forwardRef((props, ref) => {
+   const isUserLoggedIn = isRoleLoggedIn("user");
+   const setStep = useSetAtom(stepAtom);
+   const currentStep = useAtomValue(stepAtom);
+-  const currentRoleData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const currentRoleData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const currentRoleData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+   const location = useLocation();
+   const navigate = useNavigate();
+ 
+@@ -164,7 +168,7 @@ export const Header = forwardRef((props, ref) => {
+           variant="white"
+           size="xl"
+           onClick={() => {
+-            navigate("/auth");
++            navigate("/wellbeing-info");
+           }}
+         >
+           Back
+diff --git a/frontend/src/report-generation/ConsentForm.jsx b/frontend/src/report-generation/ConsentForm.jsx
+index b4ddba8..53b4009 100644
+--- a/frontend/src/report-generation/ConsentForm.jsx
++++ b/frontend/src/report-generation/ConsentForm.jsx
+@@ -102,7 +102,15 @@ const ConsentForm = () => {
+               return;
+             }
+ 
+-            if (isRoleLoggedIn("user")) {
++            // OLD BEHAVIOR: Only checked for user role
++            // if (isRoleLoggedIn("user")) {
++            //   setStep("dashboard");
++            // } else {
++            //   navigate("/registration");
++            // }
++            
++            // NEW BEHAVIOR: Allow both user and admin to proceed to dashboard
++            if (isRoleLoggedIn("user") || isRoleLoggedIn("admin")) {
+               setStep("dashboard");
+             } else {
+               navigate("/registration");
+diff --git a/frontend/src/report-generation/FacialAnalysis.jsx b/frontend/src/report-generation/FacialAnalysis.jsx
+index 7f0c1d6..49221ed 100644
+--- a/frontend/src/report-generation/FacialAnalysis.jsx
++++ b/frontend/src/report-generation/FacialAnalysis.jsx
+@@ -25,7 +25,11 @@ import { useLocation } from "react-router";
+ 
+ const FacialAnalysis = () => {
+   const { t, i18n } = useTranslation();
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+ 
+   const setStep = useSetAtom(stepAtom);
+   const paddedWidth = useAtomValue(paddedWidthAtom);
+diff --git a/frontend/src/report-generation/Welcome.jsx b/frontend/src/report-generation/Welcome.jsx
+index 2ed3009..b1247a6 100644
+--- a/frontend/src/report-generation/Welcome.jsx
++++ b/frontend/src/report-generation/Welcome.jsx
+@@ -12,12 +12,26 @@ export const Welcome = () => {
+     <Center
+       h={"100%"}
+       onClick={() => {
++        // OLD BEHAVIOR: Users went to dashboard, non-logged in to /auth
++        // if (isRoleLoggedIn("user") || isRoleLoggedIn("admin")) {
++        //   setStep("dashboard");
++        //   navigate("/booth");
++        //   return;
++        // }
++        // navigate("/auth");
++        
++        // NEW BEHAVIOR: Everyone goes to wellbeing-info page
++        // Admin will see "Proceed to Scan", others see login options
+         if (isRoleLoggedIn("user")) {
+           setStep("dashboard");
+           navigate("/booth");
+           return;
+         }
+-        navigate("/auth");
++        if (isRoleLoggedIn("admin")) {
++          navigate("/wellbeing-info");
++          return;
++        }
++        navigate("/wellbeing-info");
+       }}
+     >
+       <Stack gap={96} align="center">
+diff --git a/frontend/src/report-generation/facial-analysis/FacialAnalysis.jsx b/frontend/src/report-generation/facial-analysis/FacialAnalysis.jsx
+index 7ad6bca..f4379ee 100644
+--- a/frontend/src/report-generation/facial-analysis/FacialAnalysis.jsx
++++ b/frontend/src/report-generation/facial-analysis/FacialAnalysis.jsx
+@@ -34,7 +34,11 @@ const generateUniqueFilename = () => {
+ 
+ export const FacialAnalysis = () => {
+   const { t, i18n } = useTranslation();
+-  const userData = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const userData = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
+ 
+   const setStep = useSetAtom(stepAtom);
+   const paddedWidth = useAtomValue(paddedWidthAtom);
+@@ -108,7 +112,7 @@ export const FacialAnalysis = () => {
+   const cameraScreenOvalBorder =
+     errorMessage?.length > 0 ? "8px dashed #FF7575" : "8px solid #FF7575";
+ 
+-  console.log("currentDevice", currentDevice);
++  // console.log("currentDevice", currentDevice); // Removed excessive logging
+ 
+   const startCamera = useCallback(async () => {
+     try {
+diff --git a/frontend/src/report-generation/result/Report.jsx b/frontend/src/report-generation/result/Report.jsx
+index ee3167b..e33a884 100644
+--- a/frontend/src/report-generation/result/Report.jsx
++++ b/frontend/src/report-generation/result/Report.jsx
+@@ -70,7 +70,11 @@ export const Report = () => {
+   const { t } = useTranslation();
+   const navigate = useNavigate();
+ 
+-  const user = getCurrentRoleData("user");
++  // OLD BEHAVIOR: Only get user role data
++  // const user = getCurrentRoleData("user");
++  
++  // NEW BEHAVIOR: Get data from either user or admin role
++  const user = getCurrentRoleData("user") || getCurrentRoleData("admin");
+ 
+   const reportId = useAtomValue(reportIdAtom);
+   const trialId = useAtomValue(trialIdAtom);
+@@ -121,14 +125,21 @@ export const Report = () => {
+     return <div>Error</div>;
+   }
+ 
++  const data = trialId ? trialReport.data : report.data;
+   const {
+     ageRange = null,
+     gender = null,
+     vitalSigns,
+     mentalHealthScores,
+-  } = trialId ? trialReport.data : report.data;
+-
+-  console.log("data", trialReport.data);
++  } = data;
++  
++  // Fallback: if mentalHealthScores is not available, try to get it from the original data structure
++  const fallbackMentalHealthScores = mentalHealthScores || data?.mental_health_scores;
++
++  console.log("data", trialId ? trialReport.data : report.data);
++  console.log("mentalHealthScores", mentalHealthScores);
++  console.log("fallbackMentalHealthScores", fallbackMentalHealthScores);
++  console.log("vitalSigns", vitalSigns);
+   let patientData = {
+     name: "Patient",
+     age: "N/A",
+@@ -136,12 +147,12 @@ export const Report = () => {
+     bloodPressure: vitalSigns
+       ? `${vitalSigns.blood_pressure_systolic}/${vitalSigns.blood_pressure_diastolic}`
+       : "NA",
+-    stressLevel: mentalHealthScores ? `${mentalHealthScores.stress}` : "NA",
++    stressLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.stress}` : "NA",
+     restingHeartRate: vitalSigns ? `${vitalSigns.heart_rate}` : "70",
+-    anxietyLevel: mentalHealthScores ? `${mentalHealthScores.anxiety}` : "NA",
++    anxietyLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.anxiety}` : "NA",
+     bloodOxygenLevel: vitalSigns ? `${vitalSigns.spo2}` : "95",
+-    depressionLevel: mentalHealthScores
+-      ? `${mentalHealthScores.depression}`
++    depressionLevel: fallbackMentalHealthScores
++      ? `${fallbackMentalHealthScores.depression}`
+       : "NA",
+   };
+ 
+diff --git a/frontend/src/report-generation/result/queries.js b/frontend/src/report-generation/result/queries.js
+index 20be5eb..297f4b7 100644
+--- a/frontend/src/report-generation/result/queries.js
++++ b/frontend/src/report-generation/result/queries.js
+@@ -12,6 +12,7 @@ const toClientReport = (report) => {
+   let responseData = report;
+ 
+   console.log("responseData", responseData);
++  console.log("mental_health_scores", responseData?.mental_health_scores);
+   let heartRateResult = findRestingHeartRateResult({
+     restingHeartRate: responseData?.vital_signs?.heart_rate,
+     ageRange: responseData?.ageRange,
+@@ -31,16 +32,23 @@ const toClientReport = (report) => {
+     },
+   };
+ 
+-  return {
++  const transformedData = {
+     ...responseData,
+-    reportId: report.id,
++    reportId: responseData._id || responseData.id,
+   };
++  
++  console.log("transformedData", transformedData);
++  console.log("transformedData.mentalHealthScores", transformedData.mentalHealthScores);
++  
++  return transformedData;
+ };
+ 
+ const fetchReport = async ({ queryKey }) => {
+   const [, reportId] = queryKey;
+   const response = await apiClient.get(API_ENDPOINTS.REPORT.GET(reportId));
+-  return toClientReport(response.data.data);
++  // Handle both array and object responses
++  const data = Array.isArray(response.data) ? response.data[0] : response.data;
++  return toClientReport(data);
+ };
+ 
+ export const useReport = (reportId, options) => {
+-- 
+2.50.1
+

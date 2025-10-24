@@ -13,11 +13,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Navigate } from "react-router";
+import { Navigate, useNavigate } from "react-router";
 import { z } from "zod/v4";
 
 import { isRoleLoggedIn } from "../api-client/auth";
-import { boothVenueAtom, loggedInUserAtom } from "../atoms";
+import { boothVenueAtom, loggedInUserAtom, stepAtom } from "../atoms";
 import { UPDATED_TAB_SIZES } from "../atoms/sd";
 import { Button } from "../design-system/button";
 import { TextInput } from "../form-inputs";
@@ -30,6 +30,8 @@ export const AdminLogin = () => {
   const setLoggedInUser = useSetAtom(loggedInUserAtom);
   const setBoothVenue = useSetAtom(boothVenueAtom);
   const loggedInUser = useAtomValue(loggedInUserAtom);
+  const navigate = useNavigate();
+  const setStep = useSetAtom(stepAtom);
 
   const SIZES = UPDATED_TAB_SIZES;
 
@@ -71,6 +73,10 @@ export const AdminLogin = () => {
       localStorage.setItem("boothVenue", data.user?.user_name);
       setLoggedInUser(data.user);
       console.log("data", data);
+      
+      // NEW BEHAVIOR: After admin login, go to welcome screen (Press Anywhere To Proceed)
+      setStep("welcome");
+      navigate("/booth");
     },
   });
 
@@ -111,8 +117,16 @@ export const AdminLogin = () => {
     loggedInUser,
   });
 
+  // COMMENTED OUT: Old behavior - redirect to /auth for second login
+  // if (isRoleLoggedIn("admin")) {
+  //   return <Navigate to="/auth" replace />;
+  // }
+
+  // NEW BEHAVIOR: Skip second login for admin - go directly to welcome screen at booth
+  // Note: The actual navigation happens in the login onSuccess callback above
+  // This check is for page refresh scenarios
   if (isRoleLoggedIn("admin")) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/booth" replace />;
   }
 
   return (

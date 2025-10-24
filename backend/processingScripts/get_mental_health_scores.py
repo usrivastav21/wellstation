@@ -8,6 +8,8 @@ import numpy as np
 
 def get_mental_health_scores(output_dir, stress_severity, anxiety_severity, depression_severity, fallback_logic=False):
 	
+	print(f"get_mental_health_scores called with: stress={stress_severity}, anxiety={anxiety_severity}, depression={depression_severity}, fallback={fallback_logic}")
+	
 	mental_health_scores = dict()
 	
 	# stress prediction
@@ -24,6 +26,8 @@ def get_mental_health_scores(output_dir, stress_severity, anxiety_severity, depr
 	if fallback_logic:
 		depression_severity = np.random.choice(['low', 'medium', 'high'], size=None, p=[0.75316456, 0.18987342, 0.05696203])
 	mental_health_scores['depression'] = depression_severity
+	
+	print(f"Final mental health scores: {mental_health_scores}")
 	
 	with open(os.path.join(output_dir, 'mental_health_scores.json'), 'w') as f:
 		json.dump(mental_health_scores, f)
