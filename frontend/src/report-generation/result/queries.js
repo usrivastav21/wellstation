@@ -12,6 +12,7 @@ const toClientReport = (report) => {
   let responseData = report;
 
   console.log("responseData", responseData);
+  console.log("mental_health_scores", responseData?.mental_health_scores);
   let heartRateResult = findRestingHeartRateResult({
     restingHeartRate: responseData?.vital_signs?.heart_rate,
     ageRange: responseData?.ageRange,
@@ -31,16 +32,23 @@ const toClientReport = (report) => {
     },
   };
 
-  return {
+  const transformedData = {
     ...responseData,
-    reportId: report.id,
+    reportId: responseData._id || responseData.id,
   };
+  
+  console.log("transformedData", transformedData);
+  console.log("transformedData.mentalHealthScores", transformedData.mentalHealthScores);
+  
+  return transformedData;
 };
 
 const fetchReport = async ({ queryKey }) => {
   const [, reportId] = queryKey;
   const response = await apiClient.get(API_ENDPOINTS.REPORT.GET(reportId));
-  return toClientReport(response.data.data);
+  // Handle both array and object responses
+  const data = Array.isArray(response.data) ? response.data[0] : response.data;
+  return toClientReport(data);
 };
 
 export const useReport = (reportId, options) => {

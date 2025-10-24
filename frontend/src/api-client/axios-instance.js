@@ -18,7 +18,15 @@ const createAxiosInstance = () => {
 
   instance.interceptors.request.use(
     (config) => {
-      const currentRole = getCurrentRoleData("user");
+      // OLD BEHAVIOR: Only check for user role
+      // const currentRole = getCurrentRoleData("user");
+      
+      // NEW BEHAVIOR: Check for both user and admin roles
+      let currentRole = getCurrentRoleData("user");
+      if (!currentRole) {
+        currentRole = getCurrentRoleData("admin");
+      }
+      
       let token = null;
       if (currentRole?.role) {
         token = getAuthToken(currentRole.role);
@@ -31,11 +39,13 @@ const createAxiosInstance = () => {
       if (token) {
         // Check if token exists and is not expired
         if (isTokenExpired(token)) {
-          // if (isTokenExpired(token)) {
-          //   // Token is expired, clear tokens and redirect to login
-          removeAuthToken("user");
-          //   // localStorage.removeItem("boothLoggedInUser");
-          //   // localStorage.removeItem("boothVenue");
+          // Token is expired, clear tokens and redirect
+          if (currentRole?.role === "admin") {
+            removeAuthToken("admin");
+          } else {
+            removeAuthToken("user");
+          }
+          
           if (window.electron) {
             window.location.hash = "#/booth";
           } else {

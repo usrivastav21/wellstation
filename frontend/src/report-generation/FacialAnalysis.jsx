@@ -25,7 +25,11 @@ import { useLocation } from "react-router";
 
 const FacialAnalysis = () => {
   const { t, i18n } = useTranslation();
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
 
   const setStep = useSetAtom(stepAtom);
   const paddedWidth = useAtomValue(paddedWidthAtom);

@@ -34,7 +34,11 @@ const generateUniqueFilename = () => {
 
 export const FacialAnalysis = () => {
   const { t, i18n } = useTranslation();
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
 
   const setStep = useSetAtom(stepAtom);
   const paddedWidth = useAtomValue(paddedWidthAtom);
@@ -108,7 +112,7 @@ export const FacialAnalysis = () => {
   const cameraScreenOvalBorder =
     errorMessage?.length > 0 ? "8px dashed #FF7575" : "8px solid #FF7575";
 
-  console.log("currentDevice", currentDevice);
+  // console.log("currentDevice", currentDevice); // Removed excessive logging
 
   const startCamera = useCallback(async () => {
     try {

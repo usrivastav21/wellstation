@@ -50,7 +50,7 @@ def validate_file_request(file_key, file_type):
     return True, file, metadata
 
 
-# @media_bp.route('/video', methods=['POST'])
+@media_bp.route('/video', methods=['POST'])
 def process_video():
     is_valid, response_or_file, status_or_metadata = validate_file_request(
         "videoFile", "video"
@@ -70,7 +70,7 @@ def process_video():
         return {"success": False, "error": f"Processing failed: {str(e)}"}, 500
 
 
-# @media_bp.route('/audio', methods=['POST'])
+@media_bp.route('/audio', methods=['POST'])
 def process_audio():
     print("process_audio start")
     # Validate request
@@ -85,12 +85,13 @@ def process_audio():
 
     # Process audio
     try:
-        result = audioProcessingStart(file, userId)
+        result = audioProcessingStart(file, userId, is_trial=False)
         return {"success": True, "data": result}
     except Exception as e:
         return {"success": False, "error": f"Processing failed: {str(e)}"}, 500
 
 
+@media_bp.route('/fetch/report/<user_id>', methods=['GET'])
 def fetch_user_report_by_id(user_id):
     search_query = {
         "user_Id": user_id,
@@ -98,7 +99,7 @@ def fetch_user_report_by_id(user_id):
     report = find_data(COLLECTIONS["USERS"], search_query, 1)
 
     # Convert ObjectId to string if present in the report
-    if report and "_id" in report[0]:
+    if report and len(report) > 0 and "_id" in report[0]:
         report[0]["_id"] = str(report[0]["_id"])
 
     return report

@@ -84,7 +84,11 @@ export const Header = forwardRef((props, ref) => {
   const isUserLoggedIn = isRoleLoggedIn("user");
   const setStep = useSetAtom(stepAtom);
   const currentStep = useAtomValue(stepAtom);
-  const currentRoleData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const currentRoleData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const currentRoleData = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -164,7 +168,7 @@ export const Header = forwardRef((props, ref) => {
           variant="white"
           size="xl"
           onClick={() => {
-            navigate("/auth");
+            navigate("/wellbeing-info");
           }}
         >
           Back

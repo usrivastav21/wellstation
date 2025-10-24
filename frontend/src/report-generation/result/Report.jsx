@@ -70,7 +70,11 @@ export const Report = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const user = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const user = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const user = getCurrentRoleData("user") || getCurrentRoleData("admin");
 
   const reportId = useAtomValue(reportIdAtom);
   const trialId = useAtomValue(trialIdAtom);
@@ -121,14 +125,21 @@ export const Report = () => {
     return <div>Error</div>;
   }
 
+  const data = trialId ? trialReport.data : report.data;
   const {
     ageRange = null,
     gender = null,
     vitalSigns,
     mentalHealthScores,
-  } = trialId ? trialReport.data : report.data;
+  } = data;
+  
+  // Fallback: if mentalHealthScores is not available, try to get it from the original data structure
+  const fallbackMentalHealthScores = mentalHealthScores || data?.mental_health_scores;
 
-  console.log("data", trialReport.data);
+  console.log("data", trialId ? trialReport.data : report.data);
+  console.log("mentalHealthScores", mentalHealthScores);
+  console.log("fallbackMentalHealthScores", fallbackMentalHealthScores);
+  console.log("vitalSigns", vitalSigns);
   let patientData = {
     name: "Patient",
     age: "N/A",
@@ -136,12 +147,12 @@ export const Report = () => {
     bloodPressure: vitalSigns
       ? `${vitalSigns.blood_pressure_systolic}/${vitalSigns.blood_pressure_diastolic}`
       : "NA",
-    stressLevel: mentalHealthScores ? `${mentalHealthScores.stress}` : "NA",
+    stressLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.stress}` : "NA",
     restingHeartRate: vitalSigns ? `${vitalSigns.heart_rate}` : "70",
-    anxietyLevel: mentalHealthScores ? `${mentalHealthScores.anxiety}` : "NA",
+    anxietyLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.anxiety}` : "NA",
     bloodOxygenLevel: vitalSigns ? `${vitalSigns.spo2}` : "95",
-    depressionLevel: mentalHealthScores
-      ? `${mentalHealthScores.depression}`
+    depressionLevel: fallbackMentalHealthScores
+      ? `${fallbackMentalHealthScores.depression}`
       : "NA",
   };
 

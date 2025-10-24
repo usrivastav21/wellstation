@@ -19,7 +19,7 @@ import { Error } from "./error";
 import Layout from "./Layout";
 import {
   AdminLogin,
-  Login,
+  WellbeingInfo, // Renamed from Login - shows wellbeing information page
   ChangePin,
   ResetPin,
   ResetPinSuccess,
@@ -27,6 +27,8 @@ import {
 } from "./login";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { PublicRoute } from "./PublicRoute";
+import { AdminAwarePublicRoute } from "./AdminAwarePublicRoute";
+import { AdminLoginRoute } from "./AdminLoginRoute";
 import { Registration } from "./registration";
 import { ReportGenerationFlow } from "./report-generation";
 import { Resources } from "./resources/Resources";
@@ -149,7 +151,13 @@ function App() {
                 <Route
                   path="/booth"
                   element={
-                    <ProtectedRoute>
+                    // OLD BEHAVIOR: Only allowed user role
+                    // <ProtectedRoute>
+                    //   <ReportGenerationFlow />
+                    // </ProtectedRoute>
+                    
+                    // NEW BEHAVIOR: Allow both user and admin to access booth
+                    <ProtectedRoute allowAdminAccess={true}>
                       <ReportGenerationFlow />
                     </ProtectedRoute>
                   }
@@ -157,25 +165,50 @@ function App() {
                 <Route
                   path="/admin-login"
                   element={
-                    <PublicRoute>
+                    // OLD BEHAVIOR: PublicRoute only checked "user" role by default
+                    // <PublicRoute>
+                    //   <AdminLogin />
+                    // </PublicRoute>
+                    
+                    // NEW BEHAVIOR: Use AdminLoginRoute that redirects admin to /booth
+                    <AdminLoginRoute>
                       <AdminLogin />
-                    </PublicRoute>
+                    </AdminLoginRoute>
                   }
                 />
                 <Route
-                  path="/auth"
+                  path="/wellbeing-info"
                   element={
-                    <PublicRoute>
-                      <Login />
-                    </PublicRoute>
+                    // OLD BEHAVIOR: Only checked for user role - required second login
+                    // <PublicRoute>
+                    //   <WellbeingInfo />
+                    // </PublicRoute>
+                    
+                    // NEW BEHAVIOR: Show wellbeing info page after welcome screen
+                    // For admin: shows only "Proceed to Scan" button
+                    // For regular users: shows login/registration options
+                    <AdminAwarePublicRoute>
+                      <WellbeingInfo />
+                    </AdminAwarePublicRoute>
                   }
+                />
+                {/* Keep /auth as redirect for backward compatibility */}
+                <Route
+                  path="/auth"
+                  element={<Navigate to="/wellbeing-info" replace />}
                 />
                 <Route
                   path="/auth/login"
                   element={
-                    <PublicRoute>
+                    // OLD BEHAVIOR: Only checked for user role - required second login
+                    // <PublicRoute>
+                    //   <UserLogin />
+                    // </PublicRoute>
+                    
+                    // NEW BEHAVIOR: Skip second login for admin - go directly to booth
+                    <AdminAwarePublicRoute>
                       <UserLogin />
-                    </PublicRoute>
+                    </AdminAwarePublicRoute>
                   }
                 />
                 <Route

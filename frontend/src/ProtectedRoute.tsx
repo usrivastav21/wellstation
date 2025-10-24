@@ -8,14 +8,16 @@ import { stepAtom, trialIdAtom } from "./atoms";
 
 export const ProtectedRoute = ({
   children,
-  redirectTo = "/auth",
+  redirectTo = "/wellbeing-info",
   role = "user",
   fallback = null,
+  allowAdminAccess = false, // NEW: Allow admin to access user-protected routes
 }: {
   children: React.ReactNode;
   redirectTo?: string;
   role?: Role;
   fallback?: React.ReactNode;
+  allowAdminAccess?: boolean; // NEW: Allow admin to access user-protected routes
 }) => {
   const navigate = useNavigate();
   const [isReady, setIsReady] = useState(false);
@@ -28,7 +30,16 @@ export const ProtectedRoute = ({
   useEffect(() => {
     const checkAuth = () => {
       try {
-        const isLoggedIn = isRoleLoggedIn(role);
+        // OLD BEHAVIOR: Only check for specified role
+        // const isLoggedIn = isRoleLoggedIn(role);
+        
+        // NEW BEHAVIOR: Check for specified role OR admin if allowAdminAccess is true
+        let isLoggedIn = isRoleLoggedIn(role);
+        
+        // If not logged in as the specified role but allowAdminAccess is true, check if admin is logged in
+        if (!isLoggedIn && allowAdminAccess) {
+          isLoggedIn = isRoleLoggedIn('admin');
+        }
 
         if (
           !isLoggedIn &&
@@ -51,7 +62,7 @@ export const ProtectedRoute = ({
     };
 
     checkAuth();
-  }, [navigate, redirectTo, role, step]);
+  }, [navigate, redirectTo, role, step, allowAdminAccess]);
 
   if (isLoading) {
     return (

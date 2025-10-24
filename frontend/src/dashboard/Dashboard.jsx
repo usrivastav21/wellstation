@@ -273,7 +273,11 @@ const calculateAverage = (reports, levelKey = "") => {
 };
 
 const WeekPanelContent = ({ label, levelKey }) => {
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const [weekStartDate, setWeekStartDate] = useState(null);
   const [weekEndDate, setWeekEndDate] = useState(null);
 
@@ -381,7 +385,11 @@ const WeekPanelContent = ({ label, levelKey }) => {
 };
 
 const MonthPanelContent = ({ label, levelKey }) => {
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const [month, setMonth] = useState(() => new Date());
 
   const monthReports = useMonthReportsWithIntervals({
@@ -466,7 +474,11 @@ const MonthPanelContent = ({ label, levelKey }) => {
 };
 
 const YearPanelContent = ({ label, levelKey }) => {
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const [year, setYear] = useState(() => new Date());
 
   const yearReports = useYearReports({
@@ -650,7 +662,11 @@ export const Dashboard = () => {
   const gender = useAtomValue(selectedGenderAtom);
   const reportId = useAtomValue(reportIdAtom);
   const trialId = useAtomValue(trialIdAtom);
-  const userData = getCurrentRoleData("user");
+  // OLD BEHAVIOR: Only get user role data
+  // const userData = getCurrentRoleData("user");
+  
+  // NEW BEHAVIOR: Get data from either user or admin role
+  const userData = getCurrentRoleData("user") || getCurrentRoleData("admin");
   const setReportId = useSetAtom(reportIdAtom);
   const [activeTab, setActiveTab] = useState("overall");
   const [activeStressTab, setActiveStressTab] = useState("week");

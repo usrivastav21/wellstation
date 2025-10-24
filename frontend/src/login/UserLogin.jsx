@@ -76,7 +76,7 @@ export const UserLogin = () => {
     onError: (error) => {
       console.log(error);
       if (error.response.status === 403) {
-        navigate("/auth");
+        navigate("/wellbeing-info");
       }
       if (error.response.status === 401) {
         setApiError("Invalid email or pin. Please try again.");
