@@ -28,6 +28,7 @@ const ConsentForm = React.lazy(() => import("./ConsentForm.jsx"));
 const BasicInfo = React.lazy(() => import("./BasicInfo.jsx"));
 // const FacialAnalysis = React.lazy(() => import("./FacialAnalysis.jsx"));
 const ConsentDeclined = React.lazy(() => import("./ConsentDeclined.jsx"));
+import { ClinicalInsights } from "./ClinicalInsights.jsx";
 
 const STEP_COMPONENTS = {
   welcome: Welcome,
@@ -41,6 +42,7 @@ const STEP_COMPONENTS = {
   result: Result,
   // result: EmailResult,
   report: Report,
+  clinicalInsights: ClinicalInsights,
   sessionComplete: SessionComplete,
   default: Welcome,
   // waitlist: Waitlist,

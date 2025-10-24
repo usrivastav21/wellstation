@@ -36,8 +36,13 @@ const getBackendUrl = () => {
 const config = {
   API_URL: getBackendUrl(),
   ENV: import.meta.env.VITE_NODE_ENV,
-  REPORT_URL: import.meta.env.VITE_REPORT_URL,
+  REPORT_URL: import.meta.env.VITE_REPORT_URL || (import.meta.env.DEV ? "http://localhost:3000/#/report" : "https://reportsui.z23.web.core.windows.net"),
   BACKEND_PORT: getBackendPort(),
 };
+
+// Debug logging
+console.log("Config REPORT_URL:", config.REPORT_URL);
+console.log("VITE_REPORT_URL env:", import.meta.env.VITE_REPORT_URL);
+console.log("Is development mode:", import.meta.env.DEV);
 
 export { config };

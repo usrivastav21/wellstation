@@ -67,7 +67,7 @@ export const EmailResult = () => {
       config.REPORT_URL
     }/${candidateId}?boothVenue=${encodeURIComponent(
       loggedInUser?.userName
-    )}&launch=${encodeURIComponent(loggedInUser.launch)}`;
+    )}&launch=${encodeURIComponent(loggedInUser?.launch || "default")}`;
 
     console.log("selected mood", selectedMood);
     sendEmail({

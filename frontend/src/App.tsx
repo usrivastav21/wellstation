@@ -31,6 +31,8 @@ import { AdminAwarePublicRoute } from "./AdminAwarePublicRoute";
 import { AdminLoginRoute } from "./AdminLoginRoute";
 import { Registration } from "./registration";
 import { ReportGenerationFlow } from "./report-generation";
+import { PublicReportViewer } from "./report-generation/PublicReportViewer";
+import { ClinicalInsights } from "./report-generation/ClinicalInsights";
 import { Resources } from "./resources/Resources";
 
 // 1 minute
@@ -218,6 +220,15 @@ function App() {
                       <Registration />
                     </PublicRoute>
                   }
+                />
+                <Route
+                  path="/report/:reportId"
+                  element={<PublicReportViewer />}
+                />
+                {/* Testing route for ClinicalInsights screen */}
+                <Route
+                  path="/test-clinical-insights"
+                  element={<ClinicalInsights />}
                 />
                 <Route path="/" element={<Navigate to="/admin-login" />} />
                 <Route

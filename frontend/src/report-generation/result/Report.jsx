@@ -1,5 +1,5 @@
 import { Box, HStack, VStack } from "@chakra-ui/react";
-import { Center, Stack, Text, Button, Group } from "@mantine/core";
+import { Center, Stack, Text, Button, Group, Modal, Box as MantineBox } from "@mantine/core";
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
@@ -17,6 +17,8 @@ import { getCurrentRoleData } from "../../api-client";
 import { useSendEmail } from "./useSendEmail";
 import { useReportUrl } from "../useReportUrl";
 import { useNavigate } from "react-router";
+
+const TIME_LEFT = 30; // time left in seconds
 
 const getIndicatorValue = ({ gender, ageRange, metric, value }) => {
   switch (metric) {
@@ -81,6 +83,8 @@ export const Report = () => {
   const [infoText, setInfoText] = useState(null);
   const [isInfoPopUpOpen, setIsInfoPopUpOpen] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(TIME_LEFT);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const setStep = useSetAtom(stepAtom);
 
   const emailSentRef = useRef(false);
@@ -116,6 +120,22 @@ export const Report = () => {
     trialReport.isSuccess,
     sendEmail,
   ]);
+
+  // Timer effect for auto-close
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 1) {
+          // Time's up - show popup
+          setIsModalOpen(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   if (report.isLoading || trialReport.isLoading) {
     return <div>Loading...</div>;
@@ -346,8 +366,8 @@ export const Report = () => {
 
         <Stack gap={12} align="center">
           <Stack gap={40} align="center">
-            <Text fw={"bold"} ta="center" fz={20}>
-              {t("report.copy-sent-message")}
+            <Text fw={"bold"} ta="center" fz={16} c="dimmed">
+              This page will automatically close in {timeLeft} seconds
             </Text>
             {/* <Button
               variant="brand-filled"
@@ -386,25 +406,6 @@ export const Report = () => {
             >
               {t("general.exit")}
             </Button> */}
-            <Button
-              bd={"4px solid var(--mantine-color-text-9)"}
-              size="xl"
-              bdrs="lg"
-              onClick={async () => {
-                navigate("/booth", {
-                  state: {
-                    showRewards: true,
-                  },
-                });
-                setStep("dashboard");
-              }}
-            >
-              Back to Dashboard
-            </Button>
-            <Group gap={24}>
-              <Text>Share via</Text>
-              <GenerateQrCode size={80} />
-            </Group>
           </Group>
 
           {/* <ExitModal
@@ -424,6 +425,68 @@ export const Report = () => {
           /> */}
         </Stack>
       </Stack>
+
+      {/* Auto-close popup modal */}
+      <Modal
+        opened={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title=""
+        centered
+        size="md"
+        withCloseButton={false}
+        styles={{
+          content: {
+            border: "2px solid #E55A2B",
+            borderRadius: "12px",
+          }
+        }}
+      >
+        <Stack gap="lg" align="center">
+          <Text fw="bold" fz="lg" ta="center">
+            Nice work completing the scan. We've made a short video that might be helpful for where you're at.
+          </Text>
+          
+          {/* YouTube Video Placeholder */}
+          <MantineBox
+            w="100%"
+            h={200}
+            bg="gray.2"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              border: "1px solid #ddd"
+            }}
+          >
+            <Text fw="bold" fz="lg" c="dimmed">
+              YouTube Video
+            </Text>
+          </MantineBox>
+          
+          {/* Call to Action Button */}
+          <Button
+            variant="brand-filled"
+            size="lg"
+            fullWidth
+            onClick={() => {
+              setIsModalOpen(false);
+              setStep("clinicalInsights");
+              navigate("/booth");
+            }}
+            styles={{
+              root: {
+                backgroundColor: "#E55A2B",
+                "&:hover": {
+                  backgroundColor: "#D1451A",
+                }
+              }
+            }}
+          >
+            Tap to Receive Clinical Insights On-the-Go
+          </Button>
+        </Stack>
+      </Modal>
     </Center>
   );
 };

@@ -92,7 +92,7 @@ export const Result = ({ qrValue = "Well station" }) => {
   const userReportIdUrl = useMemo(() => {
     return `${config.REPORT_URL}/${candidateId}?boothVenue=${encodeURIComponent(
       boothVenue
-    )}&launch=${encodeURIComponent(loggedInUser.launch)}`;
+    )}&launch=${encodeURIComponent(loggedInUser?.launch || "default")}`;
   }, [candidateId]);
 
   const handleExit = useCallback(() => setIsModalOpen(true), []);

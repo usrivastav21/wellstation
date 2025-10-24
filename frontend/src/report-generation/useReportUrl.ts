@@ -11,11 +11,22 @@ const useReportUrl = ({ reportId: userReportId }: { reportId: string }) => {
   const reportId = useAtomValue(reportIdAtom);
   const trialId = useAtomValue(trialIdAtom);
 
-  return `${config.REPORT_URL}/${
-    userReportId ? userReportId : trialId ? trialId : reportId
-  }?boothVenue=${
+  const finalReportId = userReportId ? userReportId : trialId ? trialId : reportId;
+  
+  console.log("useReportUrl debug:", {
+    configReportUrl: config.REPORT_URL,
+    finalReportId,
+    boothVenue,
+    loggedInUser,
+    launch: loggedInUser?.launch
+  });
+
+  const url = `${config.REPORT_URL}/${finalReportId}?boothVenue=${
     boothVenue ? encodeURIComponent(boothVenue) : ""
-  }&launch=${encodeURIComponent(loggedInUser.launch)}&isCorporate=true`;
+  }&launch=${encodeURIComponent(loggedInUser?.launch || "")}&isCorporate=true`;
+  
+  console.log("Generated URL:", url);
+  return url;
 };
 
 export { useReportUrl };
