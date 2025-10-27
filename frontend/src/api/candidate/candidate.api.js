@@ -18,7 +18,8 @@ export const uploadCandidateVideo = async (payload) => {
     const response = await apiClient.post("/video", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Upload error:", error);
+    return { status: "error", message: error.message };
   }
 };
 
@@ -27,7 +28,8 @@ export const uploadCandidateVideoTrial = async (payload) => {
     const response = await apiClient.post("/trial/video", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Upload trial error:", error);
+    return { status: "error", message: error.message };
   }
 };
 
