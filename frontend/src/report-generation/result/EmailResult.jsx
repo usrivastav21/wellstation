@@ -196,6 +196,23 @@ export const EmailResult = () => {
           >
             {t("result.lets-see-my-result")}
           </Button>
+          
+          {/* Skip Button */}
+          <Button
+            variant="ghost"
+            color="orange.500"
+            fontWeight="bold"
+            size="md"
+            onClick={() => setStep("report")}
+            w={"100%"}
+            py={1.5}
+            _hover={{
+              backgroundColor: "orange.50",
+              color: "orange.600"
+            }}
+          >
+            {t("result.ill-pass")}
+          </Button>
         </VStack>
       </Center>
     </Container>

@@ -746,6 +746,7 @@
     "congratulations": "恭喜您完成健康检查！",
     "exit": "退出",
     "glow-festival-completion-message": "您的个性化报告将在下一页显示。\n 输入您的电子邮件，获取含健康小贴士的报告副本!",
+    "ill-pass": "我跳过",
     "lets-see-my-result": "来看看我的结果吧！",
     "privacyMessage": "一旦此页面关闭，您的数据将从我们的系统中删除（除非您提交电子邮件以存储报告）。正如我们承诺的，您的隐私是我们的优先考虑。",
     "qrInstructions": "您的报告受到良好保护。扫描二维码在浏览器中加载。"
