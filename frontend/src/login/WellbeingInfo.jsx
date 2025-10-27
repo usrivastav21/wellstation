@@ -12,6 +12,7 @@ import {
 import { useSetAtom } from "jotai";
 import { Link, useNavigate } from "react-router";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { BoothWithSmile, Coins } from "../assets";
 import { stepAtom, reportIdAtom } from "../atoms";
 import { isRoleLoggedIn } from "../api-client";
@@ -19,6 +20,7 @@ import { generateReportId } from "../utils/generateUserId";
 import classes from "./Login.module.css";
 
 export const WellbeingInfo = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const setStep = useSetAtom(stepAtom);
   const setReportId = useSetAtom(reportIdAtom);
@@ -167,6 +169,8 @@ export const WellbeingInfo = () => {
               <Button
                 variant="brand-filled"
                 size="xxl"
+                bdrs="lg"
+                bd={"4px solid var(--mantine-color-text-9)"}
                 fullWidth
                 onClick={() => {
                   // OLD: Admin went to dashboard
@@ -179,7 +183,7 @@ export const WellbeingInfo = () => {
                   navigate("/booth");
                 }}
               >
-                Proceed To Scan
+                {t("basicInfo.proceedToScan")}
               </Button>
             ) : (
               <>

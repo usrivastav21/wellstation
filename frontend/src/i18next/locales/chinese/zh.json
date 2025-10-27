@@ -57,7 +57,8 @@
       "proceed": "继续"
     },
     "required": "*",
-    "startScanning": "开始扫描"
+    "startScanning": "开始扫描",
+    "proceedToScan": "继续扫描"
   },
   "basicInfoConsent": {
     "go": "返回",

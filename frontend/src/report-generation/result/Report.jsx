@@ -123,6 +123,11 @@ export const Report = () => {
 
   // Timer effect for auto-close
   useEffect(() => {
+    // Skip timer for admin/SCAPE users - they should have manual control
+    if (getCurrentRoleData("admin")) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -366,9 +371,32 @@ export const Report = () => {
 
         <Stack gap={12} align="center">
           <Stack gap={40} align="center">
-            <Text fw={"bold"} ta="center" fz={16} c="dimmed">
-              This page will automatically close in {timeLeft} seconds
-            </Text>
+            {/* Only show timer message for regular users, not for admin/SCAPE users */}
+            {!getCurrentRoleData("admin") && (
+              <Text fw={"bold"} ta="center" fz={16} c="dimmed">
+                This page will automatically close in {timeLeft} seconds
+              </Text>
+            )}
+            
+            {/* Show Next button for admin/SCAPE users */}
+            {getCurrentRoleData("admin") && (
+              <Button
+                variant="brand-filled"
+                size="xl"
+                bdrs="md"
+                onClick={() => setIsModalOpen(true)}
+                styles={{
+                  root: {
+                    backgroundColor: "#E55A2B",
+                    "&:hover": {
+                      backgroundColor: "#D1451A",
+                    }
+                  }
+                }}
+              >
+                Next
+              </Button>
+            )}
             {/* <Button
               variant="brand-filled"
               size="xl"
@@ -432,7 +460,7 @@ export const Report = () => {
         onClose={() => setIsModalOpen(false)}
         title=""
         centered
-        size="md"
+        size="lg"
         withCloseButton={false}
         styles={{
           content: {
@@ -449,7 +477,7 @@ export const Report = () => {
           {/* YouTube Video Placeholder */}
           <MantineBox
             w="100%"
-            h={200}
+            h={250}
             bg="gray.2"
             style={{
               display: "flex",

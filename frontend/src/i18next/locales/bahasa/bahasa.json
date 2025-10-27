@@ -57,7 +57,8 @@
       "proceed": "Teruskan"
     },
     "required": "*",
-    "startScanning": "Mula Imbas"
+    "startScanning": "Mula Imbas",
+    "proceedToScan": "Teruskan Ke Imbas"
   },
   "basicInfoConsent": {
     "go": "Kembali",

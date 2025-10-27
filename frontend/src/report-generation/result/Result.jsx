@@ -114,6 +114,11 @@ export const Result = ({ qrValue = "Well station" }) => {
   };
 
   useEffect(() => {
+    // Skip timer for admin/SCAPE users - they should have manual control
+    if (loggedInUser) {
+      return;
+    }
+
     const interval = setInterval(() => {
       setTimeLeft((prevTime) => {
         if (prevTime <= 1) {
@@ -126,7 +131,7 @@ export const Result = ({ qrValue = "Well station" }) => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [setStep]);
+  }, [setStep, loggedInUser]);
 
   const breakPointValues = {
     headerSize: {
@@ -336,21 +341,24 @@ export const Result = ({ qrValue = "Well station" }) => {
           </Box>
 
           {/* Privacy Message */}
-          <Flex
-            marginBottom="24px"
-            marginTop="24px"
-            width={PADDED_WIDTH}
-            align="center"
-            justify="center"
-          >
-            <Text
-              {...styles.resultText}
-              fontSize={headerSize}
-              fontWeight="bold"
+          {/* Only show timer message for regular users, not for admin/SCAPE users */}
+          {!loggedInUser && (
+            <Flex
+              marginBottom="24px"
+              marginTop="24px"
+              width={PADDED_WIDTH}
+              align="center"
+              justify="center"
             >
-              {t("result.autoCloseMessage", { seconds: timeLeft })}
-            </Text>
-          </Flex>
+              <Text
+                {...styles.resultText}
+                fontSize={headerSize}
+                fontWeight="bold"
+              >
+                {t("result.autoCloseMessage", { seconds: timeLeft })}
+              </Text>
+            </Flex>
+          )}
 
           {/* Exit Button */}
           <Flex
