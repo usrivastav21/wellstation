@@ -226,6 +226,10 @@ function App() {
                   path="/report/:reportId"
                   element={<PublicReportViewer />}
                 />
+                <Route
+                  path="/report"
+                  element={<PublicReportViewer />}
+                />
                 {/* Testing route for ClinicalInsights screen */}
                 <Route
                   path="/test-clinical-insights"

@@ -52,14 +52,19 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent
+        border="2px solid #E55A2B"
+        borderRadius="12px"
+        maxW="500px"
+        mx="auto"
+      >
         <ModalHeader pt={4} px={4} pb={6} textAlign={"center"}>
-          Let’s do a quick mood check.
+          Let's do a quick mood check.
           <br />
           How are you feeling right now?
         </ModalHeader>
         <ModalBody px={4} pb={4} pt={0}>
-          <HStack columnGap={2}>
+          <HStack columnGap={2} justify="center" wrap="wrap">
             {feedbackData.map((item) => (
               <IconButton
                 key={item.value}

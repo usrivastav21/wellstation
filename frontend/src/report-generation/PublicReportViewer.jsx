@@ -15,15 +15,19 @@ export const PublicReportViewer = () => {
   const launch = searchParams.get("launch");
   const isCorporate = searchParams.get("isCorporate");
 
+  // If no reportId in URL, use a default one or generate one
+  const actualReportId = reportId || "default-report";
+
   console.log("PublicReportViewer - URL params:", {
     reportId,
+    actualReportId,
     boothVenue,
     launch,
     isCorporate
   });
 
   // Use the existing useReport hook to fetch the report
-  const { data: report, isLoading: reportLoading, isError: reportError } = useReport(reportId);
+  const { data: report, isLoading: reportLoading, isError: reportError } = useReport(actualReportId);
 
   useEffect(() => {
     if (reportLoading) {
