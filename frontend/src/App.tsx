@@ -34,6 +34,7 @@ import { ReportGenerationFlow } from "./report-generation";
 import { PublicReportViewer } from "./report-generation/PublicReportViewer";
 import { ClinicalInsights } from "./report-generation/ClinicalInsights";
 import { Resources } from "./resources/Resources";
+import { DevEmailResult } from "./DevEmailResult";
 
 // 1 minute
 const STALE_TIME = 1000 * 60 * 1;
@@ -229,6 +230,11 @@ function App() {
                 <Route
                   path="/test-clinical-insights"
                   element={<ClinicalInsights />}
+                />
+                {/* Development route for EmailResult screen */}
+                <Route
+                  path="/dev-email-result"
+                  element={<DevEmailResult />}
                 />
                 <Route path="/" element={<Navigate to="/admin-login" />} />
                 <Route

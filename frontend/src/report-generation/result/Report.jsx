@@ -151,12 +151,18 @@ export const Report = () => {
   }
 
   const data = trialId ? trialReport.data : report.data;
+  
+  // Add null check for data to prevent destructuring errors
+  if (!data) {
+    return <div>No data available</div>;
+  }
+  
   const {
     ageRange = null,
     gender = null,
-    vitalSigns,
-    mentalHealthScores,
-  } = data;
+    vitalSigns = null,
+    mentalHealthScores = null,
+  } = data || {};
   
   // Fallback: if mentalHealthScores is not available, try to get it from the original data structure
   const fallbackMentalHealthScores = mentalHealthScores || data?.mental_health_scores;
@@ -225,7 +231,7 @@ export const Report = () => {
     }
 
     if (metric.name === "restingHeartRate") {
-      const heartRateUpdatedText = getUpdatedHeartRateText(t, ageRange, gender);
+      const heartRateUpdatedText = getUpdatedHeartRateText(t, ageRange || null, gender || null);
 
       // Ensure heartRateUpdatedText is an array
       const updatedTextArray = Array.isArray(heartRateUpdatedText)
@@ -279,8 +285,8 @@ export const Report = () => {
                   value: LEVELS.includes(displayValue.toLowerCase())
                     ? displayValue.toLowerCase()
                     : displayValue,
-                  ageRange,
-                  gender,
+                  ageRange: ageRange || null,
+                  gender: gender || null,
                 });
 
                 const colorValueV2 = getColorV2(arrowIndicatorValue);
