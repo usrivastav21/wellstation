@@ -80,8 +80,8 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
               key={item.value}
               variant={selectedValue === item.value ? "filled" : "outline"}
               color={selectedValue === item.value ? "orange" : "gray"}
-              size={{ base: "md", sm: "lg" }}
-              p={{ base: "sm", sm: "md" }}
+              size="lg"
+              p="md"
               h="auto"
               onClick={() => {
                 console.log("MoodFeedback: Clicked on", item.value);
@@ -117,14 +117,12 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
                 component="img"
                 src={item.icon}
                 alt={item.label}
-                style={{
-                  width: { base: "40px", sm: "48px" },
-                  height: { base: "40px", sm: "48px" },
-                }}
+                w={{ base: 40, sm: 48 }}
+                h={{ base: 40, sm: 48 }}
               />
               <Text
                 fw={selectedValue === item.value ? 700 : 500}
-                size={{ base: "xs", sm: "sm" }}
+                size="sm"
                 ta="center"
               >
                 {item.label}
