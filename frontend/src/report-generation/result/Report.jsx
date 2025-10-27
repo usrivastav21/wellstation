@@ -316,7 +316,7 @@ export const Report = () => {
                         color={colorValueV2}
                         fontSize="16px"
                         fontWeight="extrabold"
-                        textTransform="capitalize"
+                        style={{ textTransform: "capitalize" }}
                       >
                         {metric.unit
                           ? `${value} ${metric.unit}`
