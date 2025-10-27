@@ -57,7 +57,8 @@
       "proceed": "Proceed"
     },
     "required": "*",
-    "startScanning": "Start Scan"
+    "startScanning": "Start Scan",
+    "proceedToScan": "Proceed To Scan"
   },
   "basicInfoConsent": {
     "go": "Go Back",

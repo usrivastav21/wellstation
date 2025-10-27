@@ -17,6 +17,7 @@ import {
   Progress,
   Center,
 } from "@mantine/core";
+import { useTranslation } from "react-i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { ReferenceArea } from "recharts";
 import { LineChart } from "@mantine/charts";
@@ -654,6 +655,7 @@ const RewardsProgressBar = ({ currentPoints }) => {
 };
 
 export const Dashboard = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const queryClient = useQueryClient();
@@ -1019,7 +1021,7 @@ export const Dashboard = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Button
+              {/* <Button
                 variant="brand-filled"
                 bdrs="lg"
                 bd={"4px solid var(--mantine-color-text-9)"}
@@ -1030,8 +1032,25 @@ export const Dashboard = () => {
                   navigate("/booth");
                 }}
               >
-                Proceed To Scan
-              </Button>
+                {t("basicInfo.proceedToScan")}
+              </Button> */}
+
+
+              <Button
+                variant="brand-filled"
+                size="xl"
+                bdrs="lg"
+                bd={"2px solid var(--mantine-color-text-9)"}
+                onClick={handleStartScanning}
+                disabled={!isFormValid}
+                style={{
+                  opacity: isFormValid ? 1 : 0.5,
+                  cursor: isFormValid ? "pointer" : "not-allowed"
+                }}
+                >
+                {t("basicInfo.proceedToScan")}
+                </Button>
+
             </Stack>
           </Stack>
         </Group>

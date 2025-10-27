@@ -57,7 +57,8 @@
       "proceed": "தொடரவும்"
     },
     "required": "*",
-    "startScanning": "ஸ்கேன் தொடங்கு"
+    "startScanning": "ஸ்கேன் தொடங்கு",
+    "proceedToScan": "ஸ்கேனுக்கு தொடரவும்"
   },
   "basicInfoConsent": {
     "go": "திரும்பு",
