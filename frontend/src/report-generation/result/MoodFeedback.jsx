@@ -1,12 +1,15 @@
 import {
-  Box,
-  Button,
-  Group,
+  HStack,
+  IconButton,
+  Image,
   Modal,
-  Stack,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Text,
-  Title,
-} from "@mantine/core";
+  VStack,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import {
   BadIcon,
@@ -47,90 +50,59 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
   ];
 
   return (
-    <Modal
-      opened={isOpen}
-      onClose={onClose}
-      centered
-      size={{ base: "xs", sm: "md" }}
-      withCloseButton={false}
-      styles={{
-        content: {
-          border: "2px solid #E55A2B",
-          borderRadius: "16px",
-        }
-      }}
-    >
-      <Stack gap={{ base: "lg", sm: "xl" }} align="center" p={{ base: "lg", sm: "xl" }}>
-        <Title
-          order={2}
-          ta="center"
-          c="var(--mantine-color-text-9)"
-          fw={600}
-          size={{ base: "h4", sm: "h3" }}
-          px={{ base: 16, sm: 0 }}
-        >
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent
+        border="2px solid #E55A2B"
+        borderRadius="12px"
+        maxW="500px"
+        mx="auto"
+      >
+        <ModalHeader pt={4} px={4} pb={6} textAlign={"center"}>
           Let's do a quick mood check.
           <br />
           How are you feeling right now?
-        </Title>
-        
-        <Group gap={{ base: "sm", sm: "md" }} justify="center" wrap="wrap">
-          {feedbackData.map((item) => (
-            <Button
-              key={item.value}
-              variant={selectedValue === item.value ? "filled" : "outline"}
-              color={selectedValue === item.value ? "orange" : "gray"}
-              size="lg"
-              p="md"
-              h="auto"
-              onClick={() => {
-                console.log("MoodFeedback: Clicked on", item.value);
-                setSelectedValue(item.value);
-                onSelect(item.value);
-                onClose();
-                console.log("MoodFeedback: Called onClose");
-              }}
-              styles={{
-                root: {
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: "8px",
-                  minWidth: { base: "80px", sm: "100px" },
-                  height: "auto",
-                  padding: { base: "12px 8px", sm: "16px 12px" },
-                  borderRadius: "12px",
-                  border: selectedValue === item.value ? "2px solid #E55A2B" : "2px solid #E0E0E0",
-                  backgroundColor: selectedValue === item.value ? "#FAE0C2" : "transparent",
-                  "&:hover": {
-                    backgroundColor: selectedValue === item.value ? "#FAE0C2" : "#F5F5F5",
-                    borderColor: selectedValue === item.value ? "#E55A2B" : "#D0D0D0",
-                  },
-                },
-                inner: {
-                  flexDirection: "column",
-                  gap: "8px",
-                },
-              }}
-            >
-              <Box
-                component="img"
-                src={item.icon}
-                alt={item.label}
-                w={{ base: 40, sm: 48 }}
-                h={{ base: 40, sm: 48 }}
-              />
-              <Text
-                fw={selectedValue === item.value ? 700 : 500}
-                size="sm"
-                ta="center"
-              >
-                {item.label}
-              </Text>
-            </Button>
-          ))}
-        </Group>
-      </Stack>
+        </ModalHeader>
+        <ModalBody px={4} pb={4} pt={0}>
+          <HStack columnGap={2} justify="center" wrap="wrap">
+            {feedbackData.map((item) => (
+              <IconButton
+                key={item.value}
+                display={"flex"}
+                flexDirection={"column"}
+                bg="transparent"
+                _hover={{
+                  bg: "transparent",
+                }}
+                _active={{
+                  bg: "#FAE0C2",
+                }}
+                height="unset"
+                py={3}
+                px={2.5}
+                isActive={selectedValue === item.value}
+                icon={
+                  <VStack rowGap={2}>
+                    <Image src={item.icon} width="56px" height="56px" />
+                    <Text
+                      fontWeight={selectedValue === item.value ? "bold" : "500"}
+                    >
+                      {item.label}
+                    </Text>
+                  </VStack>
+                }
+                onClick={() => {
+                  console.log("MoodFeedback: Clicked on", item.value);
+                  setSelectedValue(item.value);
+                  onSelect(item.value);
+                  onClose(); // Explicitly close the modal
+                  console.log("MoodFeedback: Called onClose");
+                }}
+              ></IconButton>
+            ))}
+          </HStack>
+        </ModalBody>
+      </ModalContent>
     </Modal>
   );
 };
