@@ -4,6 +4,13 @@
     "screeningText": "ஸ்கேன் செய்கிறது",
     "waitMessage": "கிட்டத்தட்ட முடிந்தது!"
   },
+  "booth": {
+    "steps": {
+      "email-result": {
+        "email-error": "சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்"
+      }
+    }
+  },
   "basicInfo": {
     "ageSection": {
       "age": "வயது பிரிவு",

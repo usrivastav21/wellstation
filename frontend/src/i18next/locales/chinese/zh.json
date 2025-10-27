@@ -4,6 +4,13 @@
     "screeningText": "扫描中",
     "waitMessage": "几乎完成了！"
   },
+  "booth": {
+    "steps": {
+      "email-result": {
+        "email-error": "请输入有效的电子邮件地址"
+      }
+    }
+  },
   "basicInfo": {
     "ageSection": {
       "age": "年龄段",

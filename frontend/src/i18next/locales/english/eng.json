@@ -4,6 +4,13 @@
     "screeningText": "Wrapping up",
     "waitMessage": "Almost complete!"
   },
+  "booth": {
+    "steps": {
+      "email-result": {
+        "email-error": "Please enter a valid email address"
+      }
+    }
+  },
   "basicInfo": {
     "ageSection": {
       "age": "Age Group",

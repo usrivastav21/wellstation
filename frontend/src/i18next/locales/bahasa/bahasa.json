@@ -4,6 +4,13 @@
     "screeningText": "Mengimbas",
     "waitMessage": "hampir siap!"
   },
+  "booth": {
+    "steps": {
+      "email-result": {
+        "email-error": "Sila masukkan alamat e-mel yang sah"
+      }
+    }
+  },
   "basicInfo": {
     "ageSection": {
       "age": "Golongan Umur",

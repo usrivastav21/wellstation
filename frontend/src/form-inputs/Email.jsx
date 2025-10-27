@@ -7,13 +7,23 @@ export const Email = ({
   label = "Email",
   suffix = EMAIL_SUFFIX,
   shouldIncludeSuffix = true,
+  error,
   ...props
 }) => {
+  // Filter out props that are not valid for TextInput
+  const {
+    borderWidth,
+    maxW,
+    _focusVisible,
+    ...validProps
+  } = props;
+
   return (
     <TextInput
       size="xl"
       label={label}
-      {...props}
+      {...validProps}
+      error={error}
       errorProps={{
         fz: "lg",
       }}
