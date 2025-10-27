@@ -1,4 +1,5 @@
 export const normalizeAgeRange = (ageRange) => {
+  if (!ageRange) return "";
   return ageRange.replace(/\s+/g, ""); // Remove all spaces
 };
 
@@ -123,6 +124,13 @@ export const findRestingHeartRateIndicatorValue = ({
 };
 
 export const getUpdatedHeartRateText = (t, ageRange, gender) => {
+  // Return default text if required parameters are missing
+  if (!ageRange || !gender) {
+    return t("report.infoText.heartRateText.default", {
+      returnObjects: true,
+    });
+  }
+
   // console.log("<= ageRange before update", ageRange);
   const normalizedAgeRange = normalizeAgeRange(ageRange);
 

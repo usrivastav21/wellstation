@@ -438,13 +438,14 @@ export const FacialAnalysis = () => {
 
         return { success: true };
       } else {
-        addLog(`Upload failed with status: ${response.status}`);
+        const status = response?.status || "undefined";
+        addLog(`Upload failed with status: ${status}`);
 
         setTimeout(() => {
           setStep("voiceScanning");
         }, 1500);
 
-        return { success: false, error: `HTTP error: ${response.status}` };
+        return { success: false, error: `HTTP error: ${status}` };
       }
     } catch (error) {
       addLog(`Upload error: ${error.message}`);

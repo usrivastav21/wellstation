@@ -50,7 +50,7 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
   ];
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader pt={4} px={4} pb={6} textAlign={"center"}>
@@ -87,8 +87,11 @@ export const MoodFeedback = ({ isOpen, onClose, onSelect }) => {
                   </VStack>
                 }
                 onClick={() => {
+                  console.log("MoodFeedback: Clicked on", item.value);
                   setSelectedValue(item.value);
                   onSelect(item.value);
+                  onClose(); // Explicitly close the modal
+                  console.log("MoodFeedback: Called onClose");
                 }}
               ></IconButton>
             ))}

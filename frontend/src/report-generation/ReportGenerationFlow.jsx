@@ -19,7 +19,7 @@ import {
 } from "../api-client/index.js";
 import { Dashboard } from "../dashboard";
 import { FacialAnalysis } from "./facial-analysis";
-import { Report, Result } from "./result";
+import { Report, Result, EmailResult } from "./result";
 import { Welcome } from "./Welcome";
 import { Center, Loader } from "@mantine/core";
 
@@ -40,7 +40,7 @@ const STEP_COMPONENTS = {
   voiceScanning: VoiceScanning,
   analysisLoading: AnalysisLoading,
   result: Result,
-  // result: EmailResult,
+  emailResult: EmailResult,
   report: Report,
   clinicalInsights: ClinicalInsights,
   sessionComplete: SessionComplete,

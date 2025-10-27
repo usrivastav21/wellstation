@@ -4,6 +4,13 @@
     "screeningText": "Mengimbas",
     "waitMessage": "hampir siap!"
   },
+  "booth": {
+    "steps": {
+      "email-result": {
+        "email-error": "Sila masukkan alamat e-mel yang sah"
+      }
+    }
+  },
   "basicInfo": {
     "ageSection": {
       "age": "Golongan Umur",
@@ -756,7 +763,8 @@
     "completionMessage": "Laporan peribadi anda kini tersedia untuk anda lihat dan ia penuh dengan petua dan cadangan yang berguna!",
     "congratulations": "Tahniah kerana menyelesaikan pemeriksaan kesejahteraan anda!",
     "exit": "Keluar",
-    "glow-festival-completion-message": "Laporan peribadi anda akan dipaparkan pada skrin seterusnya.\n Masukkan e-mel anda untuk mendapatkan salinan bersama tips dan petua kesejahteraan.",
+    "glow-festival-completion-message": "Laporan peribadi anda akan dipaparkan pada\nskrin seterusnya. Masukkan e-mel anda untuk mendapatkan\nsalinan dengan tips kesejahteraan.",
+    "ill-pass": "Saya Akan Lewat",
     "lets-see-my-result": "Jom lihat keputusan saya!",
     "privacyMessage": "Sebaik sahaja halaman ini ditutup, data anda akan dipadamkan dari sistem kami (kecuali apabila anda menghantar e-mel anda untuk menyimpan laporan anda). Seperti yang kami janjikan, privasi anda adalah keutamaan kami.",
     "qrInstructions": "Laporan anda dilindungi dengan baik. Imbas kod QR untuk dimuat dalam pelayar anda."

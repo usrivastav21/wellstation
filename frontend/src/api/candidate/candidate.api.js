@@ -18,7 +18,8 @@ export const uploadCandidateVideo = async (payload) => {
     const response = await apiClient.post("/video", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Upload error:", error);
+    return { status: "error", message: error.message };
   }
 };
 
@@ -27,7 +28,8 @@ export const uploadCandidateVideoTrial = async (payload) => {
     const response = await apiClient.post("/trial/video", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Upload trial error:", error);
+    return { status: "error", message: error.message };
   }
 };
 
@@ -36,7 +38,8 @@ export const uploadCandidateAudio = async (payload) => {
     const response = await apiClient.post("/audio", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Audio upload error:", error);
+    return { status: "error", message: error.message };
   }
 };
 
@@ -45,6 +48,7 @@ export const uploadCandidateAudioTrial = async (payload) => {
     const response = await apiClient.post("/trial/audio", payload);
     return response.data;
   } catch (error) {
-    console.log(error);
+    console.log("Audio trial upload error:", error);
+    return { status: "error", message: error.message };
   }
 };

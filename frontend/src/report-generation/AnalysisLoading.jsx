@@ -136,7 +136,7 @@ export const AnalysisLoading = () => {
             }
             await queryClient.invalidateQueries({ queryKey: ["rewards"] });
             await queryClient.invalidateQueries({ queryKey: ["reports"] });
-            setStep("report");
+            setStep("emailResult");
           }, 1000);
         }
         return Math.min(newProgress, 100);

@@ -126,13 +126,14 @@ export const VoiceScanning = () => {
       } else {
         response = await uploadCandidateAudio(formData);
       }
-      if (response) {
+      if (response?.status === "success" || response?.success) {
         localStorage.removeItem(`audio_metadata_${filename}`);
         console.log(`Audio metadata ${filename} deleted from localStorage`);
         return { success: true };
       } else {
-        console.error("Upload failed: No response from API");
-        return { success: false, error: "No response from API" };
+        const errorMessage = response?.message || response?.error || "No response from API";
+        console.error("Upload failed:", errorMessage);
+        return { success: false, error: errorMessage };
       }
     } catch (error) {
       console.error(`Upload error: ${error.message}`);
