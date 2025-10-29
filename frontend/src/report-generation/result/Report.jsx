@@ -257,6 +257,59 @@ export const Report = () => {
     setIsInfoPopUpOpen(false);
   };
 
+  // Function to get unique health levels from the report
+  const getUniqueHealthLevels = () => {
+    const stressLevel = patientData.stressLevel?.toLowerCase();
+    const anxietyLevel = patientData.anxietyLevel?.toLowerCase();
+    const depressionLevel = patientData.depressionLevel?.toLowerCase();
+    
+    const levels = [stressLevel, anxietyLevel, depressionLevel]
+      .filter(level => level !== "na" && level !== undefined)
+      .map(level => level === "medium" ? "moderate" : level); // Normalize medium to moderate
+    
+    // Get unique levels and sort by priority (high > moderate > low)
+    const uniqueLevels = [...new Set(levels)];
+    const priorityOrder = ["high", "moderate", "low"];
+    
+    return uniqueLevels.sort((a, b) => 
+      priorityOrder.indexOf(a) - priorityOrder.indexOf(b)
+    );
+  };
+
+  // Function to get YouTube playlist URL based on health level
+  const getYouTubePlaylist = (level) => {
+    const playlists = {
+      high: "https://youtube.com/playlist?list=PLmWyI2rwIlss9UOuBfmx248Bx6kDdsDTf&si=NOq6fRExtMGTlCC3", // Red
+      moderate: "https://youtube.com/playlist?list=PLmWyI2rwIlssty92W0NfEAKQtf5ggtIpj&si=HW-TvEOGZ66y8QZA", // Yellow
+      low: "https://youtube.com/playlist?list=PLmWyI2rwIlsuucDLmfPqR69tyW622GLAZ&si=JQ5f1LyP9-yPGpc2" // Green
+    };
+    return playlists[level] || playlists.moderate;
+  };
+
+  // Function to get YouTube embed URL from playlist URL
+  const getYouTubeEmbedUrl = (playlistUrl) => {
+    const playlistId = playlistUrl.match(/list=([^&]+)/)?.[1];
+    if (playlistId) {
+      return `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
+    }
+    return null;
+  };
+
+  const uniqueHealthLevels = getUniqueHealthLevels();
+  
+  // Create video data for each unique level
+  const videoData = uniqueHealthLevels.map(level => ({
+    level,
+    playlistUrl: getYouTubePlaylist(level),
+    embedUrl: getYouTubeEmbedUrl(getYouTubePlaylist(level)),
+    title: `${level.charAt(0).toUpperCase() + level.slice(1)} Level Recommendations`
+  }));
+
+  // Debug logging
+  console.log("Unique Health Levels:", uniqueHealthLevels);
+  console.log("Patient Data:", patientData);
+  console.log("Video Data:", videoData);
+
   return (
     <Center h="100%">
       <Stack gap={24}>
@@ -477,26 +530,53 @@ export const Report = () => {
       >
         <Stack gap="lg" align="center">
           <Text fw="bold" fz="lg" ta="center">
-            Nice work completing the scan. We've made a short video that might be helpful for where you're at.
+            Nice work completing the scan. We've made some videos that might be helpful for where you're at.
           </Text>
           
-          {/* YouTube Video Placeholder */}
-          <MantineBox
-            w="100%"
-            h={250}
-            bg="gray.2"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              borderRadius: "8px",
-              border: "1px solid #ddd"
-            }}
-          >
-            <Text fw="bold" fz="lg" c="dimmed">
-              YouTube Video
-            </Text>
-          </MantineBox>
+          {/* Multiple YouTube Video Embeds */}
+          <Stack gap="md" w="100%">
+            {videoData.map((video, index) => (
+              <MantineBox
+                key={index}
+                w="100%"
+                h={200}
+                style={{
+                  borderRadius: "8px",
+                  border: "2px solid #E55A2B",
+                  overflow: "hidden",
+                  cursor: "pointer"
+                }}
+                onClick={() => window.open(video.playlistUrl, '_blank')}
+              >
+                {video.embedUrl ? (
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={video.embedUrl}
+                    title={video.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ pointerEvents: 'none' }} // Disable iframe interactions to allow click through
+                  />
+                ) : (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100%",
+                      backgroundColor: "#f0f0f0"
+                    }}
+                  >
+                    <Text fw="bold" fz="lg" c="dimmed">
+                      YouTube Video - {video.level}
+                    </Text>
+                  </div>
+                )}
+              </MantineBox>
+            ))}
+          </Stack>
           
           {/* Call to Action Button */}
           <Button

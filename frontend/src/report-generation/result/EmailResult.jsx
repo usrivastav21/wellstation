@@ -106,22 +106,25 @@ export const EmailResult = () => {
       />
       
       <Stack gap={0} mb={32}>
-        <Group justify="space-between" align="flex-start" mb={16}>
-          <StepCountHeader step={3} totalSteps={3} />
-          <Title
-            order={1}
-            size="h1"
-            ta="center"
-            c="var(--mantine-color-brand-5)"
-            fw={700}
-            lh={1.1}
-            maw={500}
-            mx="auto"
-            style={{ whiteSpace: "pre-line" }}
-          >
-            {t("result.congratulations")}
-          </Title>
-        </Group>
+        <Box pos="relative" mb={16}>
+          <Box pos="absolute" left={0} top={0}>
+            <StepCountHeader step={3} totalSteps={3} />
+          </Box>
+          <Box w="100%" display="flex" style={{ justifyContent: "center" }}>
+            <Title
+              order={1}
+              size="h1"
+              ta="center"
+              c="var(--mantine-color-brand-5)"
+              fw={700}
+              lh={1.1}
+              maw={500}
+              style={{ whiteSpace: "pre-line" }}
+            >
+              {t("result.congratulations")}
+            </Title>
+          </Box>
+        </Box>
 
         <Text
           ta="center"
@@ -131,7 +134,7 @@ export const EmailResult = () => {
           mb={24}
           maw={500}
           mx="auto"
-          style={{ whiteSpace: "pre-line", lineHeight: 1.4 }}
+          style={{ whiteSpace: "pre-line", lineHeight: 1.4  , marginTop: "16px"}}
         >
           {t("result.glow-festival-completion-message")}
         </Text>
