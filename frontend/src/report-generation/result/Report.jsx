@@ -322,21 +322,38 @@ export const Report = () => {
     }
   };
 
-  // Function to get YouTube playlist URL based on health level
-  const getYouTubePlaylist = (level) => {
-    const playlists = {
-      high: "https://youtube.com/playlist?list=PLmWyI2rwIlss9UOuBfmx248Bx6kDdsDTf&si=NOq6fRExtMGTlCC3", // Red
-      moderate: "https://youtube.com/playlist?list=PLmWyI2rwIlssty92W0NfEAKQtf5ggtIpj&si=HW-TvEOGZ66y8QZA", // Yellow
-      low: "https://youtube.com/playlist?list=PLmWyI2rwIlsuucDLmfPqR69tyW622GLAZ&si=JQ5f1LyP9-yPGpc2" // Green
+  // Function to get YouTube video data based on health level
+  // Using specific videos from each playlist that will autoplay
+  const getYouTubeVideoData = (level) => {
+    const videoData = {
+      // Red/High level - First video from the high stress playlist
+      high: {
+        videoId: "videoseries", // Will play from playlist
+        playlistId: "PLmWyI2rwIlss9UOuBfmx248Bx6kDdsDTf",
+        playlistUrl: "https://youtube.com/playlist?list=PLmWyI2rwIlss9UOuBfmx248Bx6kDdsDTf&si=NOq6fRExtMGTlCC3"
+      },
+      // Yellow/Moderate level - First video from the moderate playlist
+      moderate: {
+        videoId: "videoseries",
+        playlistId: "PLmWyI2rwIlssty92W0NfEAKQtf5ggtIpj",
+        playlistUrl: "https://youtube.com/playlist?list=PLmWyI2rwIlssty92W0NfEAKQtf5ggtIpj&si=HW-TvEOGZ66y8QZA"
+      },
+      // Green/Low level - First video from the low stress playlist
+      low: {
+        videoId: "videoseries",
+        playlistId: "PLmWyI2rwIlsuucDLmfPqR69tyW622GLAZ",
+        playlistUrl: "https://youtube.com/playlist?list=PLmWyI2rwIlsuucDLmfPqR69tyW622GLAZ&si=JQ5f1LyP9-yPGpc2"
+      }
     };
-    return playlists[level] || playlists.moderate;
+    return videoData[level] || videoData.moderate;
   };
 
-  // Function to get YouTube embed URL from playlist URL
-  const getYouTubeEmbedUrl = (playlistUrl) => {
-    const playlistId = playlistUrl.match(/list=([^&]+)/)?.[1];
-    if (playlistId) {
-      return `https://www.youtube.com/embed/videoseries?list=${playlistId}`;
+  // Function to get YouTube embed URL that will autoplay from the playlist
+  const getYouTubeEmbedUrl = (level) => {
+    const data = getYouTubeVideoData(level);
+    if (data.playlistId) {
+      // Autoplay the first video from the playlist
+      return `https://www.youtube.com/embed/${data.videoId}?list=${data.playlistId}&autoplay=1&mute=1`;
     }
     return null;
   };
@@ -344,10 +361,11 @@ export const Report = () => {
   const overallHealthLevel = getOverallHealthLevel();
   
   // Create single video data based on overall health level
+  const youtubeData = getYouTubeVideoData(overallHealthLevel);
   const videoData = {
     level: overallHealthLevel,
-    playlistUrl: getYouTubePlaylist(overallHealthLevel),
-    embedUrl: getYouTubeEmbedUrl(getYouTubePlaylist(overallHealthLevel)),
+    playlistUrl: youtubeData.playlistUrl,
+    embedUrl: getYouTubeEmbedUrl(overallHealthLevel),
     title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
   };
 
@@ -565,12 +583,14 @@ export const Report = () => {
         onClose={() => setIsModalOpen(false)}
         title=""
         centered
-        size="lg"
+        size="xxl"
         withCloseButton={false}
         styles={{
           content: {
             border: "2px solid #E55A2B",
             borderRadius: "12px",
+            maxWidth: "1200px",
+            width: "90vw"
           }
         }}
       >
@@ -579,17 +599,15 @@ export const Report = () => {
             Nice work completing the scan. We've made some videos that might be helpful for where you're at.
           </Text>
           
-          {/* Single YouTube Video Embed */}
+          {/* Single YouTube Video Embed - Plays from playlist */}
           <MantineBox
             w="100%"
-            h={300}
+            h={550}
             style={{
               borderRadius: "8px",
               border: "2px solid #E55A2B",
-              overflow: "hidden",
-              cursor: "pointer"
+              overflow: "hidden"
             }}
-            onClick={() => window.open(videoData.playlistUrl, '_blank')}
           >
             {videoData.embedUrl ? (
               <iframe
@@ -598,9 +616,8 @@ export const Report = () => {
                 src={videoData.embedUrl}
                 title={videoData.title}
                 frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
-                style={{ pointerEvents: 'none' }} // Disable iframe interactions to allow click through
               />
             ) : (
               <div
