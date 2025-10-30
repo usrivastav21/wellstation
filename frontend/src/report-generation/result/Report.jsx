@@ -257,23 +257,69 @@ export const Report = () => {
     setIsInfoPopUpOpen(false);
   };
 
-  // Function to get unique health levels from the report
-  const getUniqueHealthLevels = () => {
-    const stressLevel = patientData.stressLevel?.toLowerCase();
-    const anxietyLevel = patientData.anxietyLevel?.toLowerCase();
-    const depressionLevel = patientData.depressionLevel?.toLowerCase();
+  // Function to calculate total score and determine video level
+  const getOverallHealthLevel = () => {
+    const stressScore = getStressScore(patientData.stressLevel);
+    const anxietyScore = getAnxietyScore(patientData.anxietyLevel);
+    const depressionScore = getDepressionScore(patientData.depressionLevel)
     
-    const levels = [stressLevel, anxietyLevel, depressionLevel]
-      .filter(level => level !== "na" && level !== undefined)
-      .map(level => level === "medium" ? "moderate" : level); // Normalize medium to moderate
+    const totalScore = stressScore + anxietyScore + depressionScore;
     
-    // Get unique levels and sort by priority (high > moderate > low)
-    const uniqueLevels = [...new Set(levels)];
-    const priorityOrder = ["high", "moderate", "low"];
+    console.log("Individual Scores:", { 
+      stress: patientData.stressLevel ,
+      stressScore,
+      anxiety: patientData.anxietyLevel, 
+      anxietyScore,
+      depression: patientData.depressionLevel, 
+      depressionScore,
+      totalScore 
+    });
     
-    return uniqueLevels.sort((a, b) => 
-      priorityOrder.indexOf(a) - priorityOrder.indexOf(b)
-    );
+    // Based on the scoring system from the image:
+    // Total Score 5-8 → Green (Low video)
+    // Total Score 9-11 → Yellow (Moderate video) 
+    // Total Score 12+ → Red (High video)
+    if (totalScore >= 12) {
+      return "high";
+    } else if (totalScore >= 9) {
+      return "moderate";
+    } else {
+      return "low";
+    }
+  };
+
+  // Helper functions to convert levels to numeric scores based on the exact scoring system
+  const getStressScore = (level) => {
+    if (!level || level === "NA" || level === "na") return 1; // Default to low
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
+      case "low": return 1;
+      case "medium": return 2;
+      case "high": return 3;
+      default: return 1;
+    }
+  };
+
+  const getAnxietyScore = (level) => {
+    if (!level || level === "NA" || level === "na") return 2; // Default to low
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
+      case "low": return 2;
+      case "medium": return 4;
+      case "high": return 6;
+      default: return 2;
+    }
+  };
+
+  const getDepressionScore = (level) => {
+    if (!level || level === "NA" || level === "na") return 2; // Default to low
+    const normalizedLevel = level.toLowerCase();
+    switch (normalizedLevel) {
+      case "low": return 2;
+      case "medium": return 4;
+      case "high": return 6;
+      default: return 2;
+    }
   };
 
   // Function to get YouTube playlist URL based on health level
@@ -295,18 +341,18 @@ export const Report = () => {
     return null;
   };
 
-  const uniqueHealthLevels = getUniqueHealthLevels();
+  const overallHealthLevel = getOverallHealthLevel();
   
-  // Create video data for each unique level
-  const videoData = uniqueHealthLevels.map(level => ({
-    level,
-    playlistUrl: getYouTubePlaylist(level),
-    embedUrl: getYouTubeEmbedUrl(getYouTubePlaylist(level)),
-    title: `${level.charAt(0).toUpperCase() + level.slice(1)} Level Recommendations`
-  }));
+  // Create single video data based on overall health level
+  const videoData = {
+    level: overallHealthLevel,
+    playlistUrl: getYouTubePlaylist(overallHealthLevel),
+    embedUrl: getYouTubeEmbedUrl(getYouTubePlaylist(overallHealthLevel)),
+    title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
+  };
 
   // Debug logging
-  console.log("Unique Health Levels:", uniqueHealthLevels);
+  console.log("Overall Health Level:", overallHealthLevel);
   console.log("Patient Data:", patientData);
   console.log("Video Data:", videoData);
 
@@ -533,50 +579,45 @@ export const Report = () => {
             Nice work completing the scan. We've made some videos that might be helpful for where you're at.
           </Text>
           
-          {/* Multiple YouTube Video Embeds */}
-          <Stack gap="md" w="100%">
-            {videoData.map((video, index) => (
-              <MantineBox
-                key={index}
-                w="100%"
-                h={200}
+          {/* Single YouTube Video Embed */}
+          <MantineBox
+            w="100%"
+            h={300}
+            style={{
+              borderRadius: "8px",
+              border: "2px solid #E55A2B",
+              overflow: "hidden",
+              cursor: "pointer"
+            }}
+            onClick={() => window.open(videoData.playlistUrl, '_blank')}
+          >
+            {videoData.embedUrl ? (
+              <iframe
+                width="100%"
+                height="100%"
+                src={videoData.embedUrl}
+                title={videoData.title}
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                style={{ pointerEvents: 'none' }} // Disable iframe interactions to allow click through
+              />
+            ) : (
+              <div
                 style={{
-                  borderRadius: "8px",
-                  border: "2px solid #E55A2B",
-                  overflow: "hidden",
-                  cursor: "pointer"
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: "100%",
+                  backgroundColor: "#f0f0f0"
                 }}
-                onClick={() => window.open(video.playlistUrl, '_blank')}
               >
-                {video.embedUrl ? (
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={video.embedUrl}
-                    title={video.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    style={{ pointerEvents: 'none' }} // Disable iframe interactions to allow click through
-                  />
-                ) : (
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      height: "100%",
-                      backgroundColor: "#f0f0f0"
-                    }}
-                  >
-                    <Text fw="bold" fz="lg" c="dimmed">
-                      YouTube Video - {video.level}
-                    </Text>
-                  </div>
-                )}
-              </MantineBox>
-            ))}
-          </Stack>
+                <Text fw="bold" fz="lg" c="dimmed">
+                  YouTube Video - {videoData.level}
+                </Text>
+              </div>
+            )}
+          </MantineBox>
           
           {/* Call to Action Button */}
           <Button
@@ -597,7 +638,7 @@ export const Report = () => {
               }
             }}
           >
-            Tap to Receive Clinical Insights On-the-Go
+         Exit
           </Button>
         </Stack>
       </Modal>
