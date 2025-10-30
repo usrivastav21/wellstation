@@ -148,7 +148,7 @@ export const EmailResult = () => {
                 label={t("general.name")}
                 placeholder="Enter your name"
                 size="xl"
-                required
+                withAsterisk={false}
                 error={errors.name?.message}
                 {...control.register("name")}
                 styles={{
@@ -175,7 +175,7 @@ export const EmailResult = () => {
                 placeholder="Enter your email"
                 size="xl"
                 type="email"
-                required
+                withAsterisk={false}
                 error={errors.email?.message}
                 {...control.register("email")}
                 styles={{
