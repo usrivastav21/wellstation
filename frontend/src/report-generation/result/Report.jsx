@@ -17,6 +17,8 @@ import { getCurrentRoleData } from "../../api-client";
 import { useSendEmail } from "./useSendEmail";
 import { useReportUrl } from "../useReportUrl";
 import { useNavigate } from "react-router";
+import useRecommendations from "../../resources/useRecommendations";
+import { VideoPlayer } from "../../resources/VideoPlayer";
 
 const TIME_LEFT = 30; // time left in seconds
 
@@ -93,6 +95,7 @@ export const Report = () => {
   const trialReport = useTrialReport(trialId);
   const { mutate: sendEmail, isPending } = useSendEmail();
   const reportLink = useReportUrl(reportId || trialId);
+  const recommendations = useRecommendations(reportId || trialId);
 
   console.log("trialReport", trialReport);
 
@@ -343,18 +346,13 @@ export const Report = () => {
 
   const overallHealthLevel = getOverallHealthLevel();
   
-  // Create single video data based on overall health level
-  const videoData = {
-    level: overallHealthLevel,
-    playlistUrl: getYouTubePlaylist(overallHealthLevel),
-    embedUrl: getYouTubeEmbedUrl(getYouTubePlaylist(overallHealthLevel)),
-    title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
-  };
+  // Pick a single recommended video to play in the modal
+  const singleVideo = recommendations.data?.videos?.[0] || null;
 
   // Debug logging
   console.log("Overall Health Level:", overallHealthLevel);
   console.log("Patient Data:", patientData);
-  console.log("Video Data:", videoData);
+  console.log("Single Video:", singleVideo);
 
   return (
     <Center h="100%">
@@ -574,46 +572,29 @@ export const Report = () => {
           }
         }}
       >
-        <Stack gap="lg" align="center">
-          <Text fw="bold" fz="lg" ta="center">
+          <Stack gap="lg" align="center">
+            <Text fw="bold" fz={20} ta="center">
             Nice work completing the scan. We've made some videos that might be helpful for where you're at.
           </Text>
           
           {/* Single YouTube Video Embed */}
-          <MantineBox
-            w="100%"
-            h={300}
-            style={{
-              borderRadius: "8px",
-              border: "2px solid #E55A2B",
-              overflow: "hidden",
-              cursor: "pointer"
-            }}
-            onClick={() => window.open(videoData.playlistUrl, '_blank')}
-          >
-            {videoData.embedUrl ? (
-              <iframe
-                width="100%"
-                height="100%"
-                src={videoData.embedUrl}
-                title={videoData.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{ pointerEvents: 'none' }} // Disable iframe interactions to allow click through
-              />
+          <MantineBox w="100%">
+            {singleVideo ? (
+              <VideoPlayer video={singleVideo} showMetadata={false} />
             ) : (
               <div
                 style={{
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  height: "100%",
-                  backgroundColor: "#f0f0f0"
+                  height: 300,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                  border: "2px solid #E55A2B",
                 }}
               >
                 <Text fw="bold" fz="lg" c="dimmed">
-                  YouTube Video - {videoData.level}
+                  Loading video recommendations...
                 </Text>
               </div>
             )}
