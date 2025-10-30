@@ -643,7 +643,7 @@ export const Report = () => {
             fullWidth
             onClick={() => {
               setIsModalOpen(false);
-              setStep("clinicalInsights");
+              setStep("welcome");
               navigate("/booth");
             }}
             styles={{
