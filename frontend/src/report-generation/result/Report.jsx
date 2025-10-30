@@ -17,6 +17,7 @@ import { getCurrentRoleData } from "../../api-client";
 import { useSendEmail } from "./useSendEmail";
 import { useReportUrl } from "../useReportUrl";
 import { useNavigate } from "react-router";
+import useRecommendations from "../../resources/useRecommendations";
 
 const TIME_LEFT = 30; // time left in seconds
 
@@ -93,6 +94,7 @@ export const Report = () => {
   const trialReport = useTrialReport(trialId);
   const { mutate: sendEmail, isPending } = useSendEmail();
   const reportLink = useReportUrl(reportId || trialId);
+  const recommendations = useRecommendations(reportId || trialId);
 
   console.log("trialReport", trialReport);
 
@@ -596,8 +598,8 @@ export const Report = () => {
           }
         }}
       >
-        <Stack gap="lg" align="center">
-          <Text fw="bold" fz="lg" ta="center">
+          <Stack gap="lg" align="center">
+            <Text fw="bold" fz={20} ta="center">
             Nice work completing the scan. We've made some videos that might be helpful for where you're at.
           </Text>
           
@@ -629,12 +631,14 @@ export const Report = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  height: "100%",
-                  backgroundColor: "#f0f0f0"
+                  height: 300,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: "8px",
+                  border: "2px solid #E55A2B",
                 }}
               >
                 <Text fw="bold" fz="lg" c="dimmed">
-                  YouTube Video - {videoData.level}
+                  Loading video recommendations...
                 </Text>
               </div>
             )}
