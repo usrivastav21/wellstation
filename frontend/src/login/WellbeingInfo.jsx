@@ -189,7 +189,7 @@ export const WellbeingInfo = () => {
               <>
                 <Button
                   component={Link}
-                  to={"/auth/login"}
+                  to={"/admin-login"}
                   variant="brand-filled"
                   size="xxl"
                   fullWidth

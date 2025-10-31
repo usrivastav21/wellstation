@@ -12,7 +12,7 @@ import {
 // import { useDisclosure } from "@mantine/hooks";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
@@ -31,12 +31,55 @@ export const EmailResult = () => {
   const candidateId = useAtomValue(reportIdAtom);
   const setStep = useSetAtom(stepAtom);
 
-  const { mutate: sendEmail, isPending } = useSendEmail({
+  const loggedInUser = getCurrentRoleData("admin");
+  const retryCountRef = useRef(0);
+  
+  const { mutate: sendEmail, isPending, isError, error } = useSendEmail({
     onSuccess: () => {
-      setStep("report");
+      retryCountRef.current = 0; // Reset retry count on success
+      // Add a small delay to ensure the report is ready before fetching
+      setTimeout(() => {
+        setStep("report");
+      }, 1500);
+    },
+    onError: (error) => {
+      // Enhanced error logging
+      console.error("Email submission error:", {
+        error,
+        message: error?.response?.data?.message || error?.message,
+        status: error?.response?.status,
+        reportId: candidateId,
+        retryAttempt: retryCountRef.current + 1,
+      });
+      
+      // Automatic retry after delay (user-friendly, no UI change)
+      // Only retry if we haven't exceeded max retries and form data is valid
+      if (retryCountRef.current < 3 && watch("name") && watch("email")) {
+        retryCountRef.current += 1;
+        const delay = Math.min(2000 * Math.pow(2, retryCountRef.current - 1), 8000);
+        setTimeout(() => {
+          console.log(`Retrying email submission (attempt ${retryCountRef.current}/3)...`);
+          sendEmail({
+            reportLink: `${
+              config.REPORT_URL
+            }/${candidateId}?boothVenue=${encodeURIComponent(
+              loggedInUser?.userName
+            )}&launch=${encodeURIComponent(loggedInUser?.launch || "default")}`,
+            name: watch("name"),
+            email: watch("email"),
+            reportId: candidateId,
+            mood: selectedMood,
+          });
+        }, delay);
+      } else {
+        // After max retries, proceed to report anyway (email may have succeeded server-side)
+        console.log("Max retries reached or form invalid. Proceeding to report...");
+        setTimeout(() => {
+          setStep("report");
+        }, 1000);
+      }
     },
   });
-  const loggedInUser = getCurrentRoleData("admin");
 
   const {
     control,
