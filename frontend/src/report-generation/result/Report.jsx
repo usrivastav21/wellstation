@@ -119,10 +119,16 @@ export const Report = () => {
 
   const emailSentRef = useRef(false);
 
-  const report = useReport(reportId);
-  const trialReport = useTrialReport(trialId);
+  const report = useReport(reportId, {
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
+  const trialReport = useTrialReport(trialId, {
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+  });
   const { mutate: sendEmail, isPending } = useSendEmail();
-  const reportLink = useReportUrl(reportId || trialId);
+  const reportLink = useReportUrl({ reportId: reportId || trialId });
   const recommendations = useRecommendations(reportId || trialId);
 
   console.log("trialReport", trialReport);
@@ -173,6 +179,67 @@ export const Report = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Automatic retry on error with exponential backoff
+  useEffect(() => {
+    if (report.isError && reportId && retryCount < 5) {
+      const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+      const timeoutId = setTimeout(() => {
+        console.log(`Retrying report fetch (attempt ${retryCount + 1}/5)...`);
+        setRetryCount((prev) => prev + 1);
+        report.refetch();
+      }, delay);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [report.isError, reportId, retryCount, report]);
+
+  useEffect(() => {
+    if (trialReport.isError && trialId && retryCount < 5) {
+      const delay = Math.min(1000 * Math.pow(2, retryCount), 10000);
+      const timeoutId = setTimeout(() => {
+        console.log(`Retrying trial report fetch (attempt ${retryCount + 1}/5)...`);
+        setRetryCount((prev) => prev + 1);
+        trialReport.refetch();
+      }, delay);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [trialReport.isError, trialId, retryCount, trialReport]);
+
+  // Reset retry count on success
+  useEffect(() => {
+    if (report.isSuccess || trialReport.isSuccess) {
+      setRetryCount(0);
+    }
+  }, [report.isSuccess, trialReport.isSuccess]);
+
+  // Enhanced error logging for debugging
+  useEffect(() => {
+    if (report.isError) {
+      console.error("Report fetch error:", {
+        error: report.error,
+        message: report.error?.response?.data?.message || report.error?.message,
+        status: report.error?.response?.status,
+        reportId,
+      });
+    }
+    if (trialReport.isError) {
+      console.error("Trial report fetch error:", {
+        error: trialReport.error,
+        message: trialReport.error?.response?.data?.message || trialReport.error?.message,
+        status: trialReport.error?.response?.status,
+        trialId,
+      });
+    }
+  }, [report.isError, trialReport.isError, report.error, trialReport.error, reportId, trialId]);
+
+  // Reset error state when modal opens - must be before early returns
+  useEffect(() => {
+    if (isModalOpen) {
+      setVideoError(false);
+      setRetryCount(0);
+    }
+  }, [isModalOpen]);
+
+  // Early returns must come after ALL hooks
   if (report.isLoading || trialReport.isLoading) {
     return <div>Loading...</div>;
   }
@@ -425,14 +492,6 @@ export const Report = () => {
       : baseEmbedUrl,
     title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
   };
-
-  // Reset error state when modal opens
-  useEffect(() => {
-    if (isModalOpen) {
-      setVideoError(false);
-      setRetryCount(0);
-    }
-  }, [isModalOpen]);
 
   const handleRetry = () => {
     setVideoError(false);
