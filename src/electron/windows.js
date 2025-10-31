@@ -1,5 +1,5 @@
 // src/electron/windows.js
-const { BrowserWindow, app } = require("electron");
+const { BrowserWindow, app, session } = require("electron");
 const path = require("path");
 const isDevMode = require("electron-is-dev");
 const { shutdown } = require("./shutdown");
@@ -43,7 +43,37 @@ const createMainWindow = (port) => {
       nodeIntegration: false,
       enableRemoteModule: false,
       preload: path.join(__dirname, "../../preload.js"),
+      // Allow proper referrer handling for YouTube embeds
+      // This helps prevent Error 153 when embedding YouTube videos
+      webSecurity: true,
+      allowRunningInsecureContent: false,
     },
+  });
+
+  // CRITICAL: Set proper User-Agent that YouTube accepts
+  // This helps prevent Error 153 by making YouTube think it's a standard browser
+  mainWindow.webContents.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+  );
+
+  // CRITICAL: Modify headers for YouTube requests to fix Error 153
+  // This adds proper Referer and Origin headers that YouTube requires
+  const filter = {
+    urls: ['*://www.youtube.com/*', '*://www.youtube-nocookie.com/*', '*://*.youtube.com/*', '*://*.youtube-nocookie.com/*']
+  };
+
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    // Set a valid Referer and Origin for YouTube requests
+    // Using a valid domain that YouTube will accept
+    details.requestHeaders['Referer'] = 'https://wellstation.app/';
+    details.requestHeaders['Origin'] = 'https://wellstation.app';
+    
+    // Ensure other required headers are present
+    if (!details.requestHeaders['User-Agent']) {
+      details.requestHeaders['User-Agent'] = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
+    }
+    
+    callback({ requestHeaders: details.requestHeaders });
   });
 
   mainWindow.prepareForShow = () => {
