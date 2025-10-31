@@ -352,8 +352,10 @@ export const Report = () => {
   const getYouTubeEmbedUrl = (level) => {
     const data = getYouTubeVideoData(level);
     if (data.playlistId) {
-      // Autoplay the first video from the playlist
-      return `https://www.youtube.com/embed/${data.videoId}?list=${data.playlistId}&autoplay=1&mute=1`;
+      // Use playlist embed with autoplay - more reliable than videoseries
+      // Adding enablejsapi for better control and origin parameter for security
+      const origin = window.location.origin;
+      return `https://www.youtube.com/embed/videoseries?list=${data.playlistId}&autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
     }
     return null;
   };
@@ -618,6 +620,8 @@ export const Report = () => {
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen
+                referrerPolicy="no-referrer-when-downgrade"
+                loading="eager"
               />
             ) : (
               <div
