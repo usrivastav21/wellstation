@@ -21,6 +21,33 @@ import useRecommendations from "../../resources/useRecommendations";
 
 const TIME_LEFT = 30; // time left in seconds
 
+/**
+ * Gets a valid origin for YouTube embeds in Electron apps
+ * This fixes Error 153 by providing a proper HTTP Referer
+ */
+const getValidOriginForElectron = () => {
+  // Check if we're in Electron environment
+  const isElectron = typeof window !== 'undefined' && (
+    window.process?.type === 'renderer' ||
+    window.navigator?.userAgent?.includes('Electron') ||
+    window.location.protocol === 'file:'
+  );
+
+  if (isElectron) {
+    // For Electron apps, use a valid HTTPS origin that YouTube accepts
+    // This works around YouTube Error 153 in Electron apps
+    return 'https://wellstation.app';
+  }
+
+  // For web apps, use the actual origin
+  const origin = window.location.origin;
+  if (!origin || origin === 'null' || origin === 'file://' || origin.startsWith('file://')) {
+    return 'https://localhost';
+  }
+
+  return origin;
+};
+
 const getIndicatorValue = ({ gender, ageRange, metric, value }) => {
   switch (metric) {
     case "bloodPressure": {
@@ -86,6 +113,8 @@ export const Report = () => {
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [timeLeft, setTimeLeft] = useState(TIME_LEFT);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
   const setStep = useSetAtom(stepAtom);
 
   const emailSentRef = useRef(false);
@@ -351,13 +380,32 @@ export const Report = () => {
   };
 
   // Function to get YouTube embed URL that will autoplay from the playlist
+  // Enhanced with Error 153 fixes
   const getYouTubeEmbedUrl = (level) => {
     const data = getYouTubeVideoData(level);
     if (data.playlistId) {
-      // Use playlist embed with autoplay - more reliable than videoseries
-      // Adding enablejsapi for better control and origin parameter for security
-      const origin = window.location.origin;
-      return `https://www.youtube.com/embed/videoseries?list=${data.playlistId}&autoplay=1&mute=1&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&origin=${encodeURIComponent(origin)}`;
+      const origin = getValidOriginForElectron();
+      
+      // Use youtube-nocookie.com domain for better compatibility and privacy
+      // This domain is specifically designed for embedded content and handles referrers better
+      // Build URL with all required parameters to prevent Error 153
+      const params = new URLSearchParams({
+        list: data.playlistId,
+        autoplay: '1',
+        mute: '1',  // Required for autoplay in most browsers
+        rel: '0',   // Don't show related videos
+        modestbranding: '1',
+        playsinline: '1',
+        enablejsapi: '1',
+        origin: origin,
+        widget_referrer: origin,
+        // Additional parameters to help with Error 153
+        controls: '1',
+        fs: '1',  // Allow fullscreen
+        iv_load_policy: '3',  // Hide annotations
+      });
+
+      return `https://www.youtube-nocookie.com/embed/videoseries?${params.toString()}`;
     }
     return null;
   };
@@ -366,17 +414,36 @@ export const Report = () => {
   
   // Create single video data based on overall health level
   const youtubeData = getYouTubeVideoData(overallHealthLevel);
+  const baseEmbedUrl = getYouTubeEmbedUrl(overallHealthLevel);
+  
+  // Add retry timestamp to force reload on retry (helps with Error 153)
   const videoData = {
     level: overallHealthLevel,
     playlistUrl: youtubeData.playlistUrl,
-    embedUrl: getYouTubeEmbedUrl(overallHealthLevel),
+    embedUrl: retryCount > 0 && baseEmbedUrl
+      ? `${baseEmbedUrl}&t=${Date.now()}`
+      : baseEmbedUrl,
     title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
+  };
+
+  // Reset error state when modal opens
+  useEffect(() => {
+    if (isModalOpen) {
+      setVideoError(false);
+      setRetryCount(0);
+    }
+  }, [isModalOpen]);
+
+  const handleRetry = () => {
+    setVideoError(false);
+    setRetryCount(prev => prev + 1);
   };
 
   // Debug logging
   console.log("Overall Health Level:", overallHealthLevel);
   console.log("Patient Data:", patientData);
   console.log("Video Data:", videoData);
+  console.log("Retry Count:", retryCount);
 
   return (
     <Center h="100%">
@@ -604,45 +671,134 @@ export const Report = () => {
           </Text>
           
           {/* Single YouTube Video Embed - Plays from playlist */}
-          <MantineBox
-            w="100%"
-            h={550}
-            style={{
-              borderRadius: "8px",
-              border: "2px solid #E55A2B",
-              overflow: "hidden"
-            }}
-          >
-            {videoData.embedUrl ? (
-              <iframe
-                width="100%"
-                height="100%"
-                src={videoData.embedUrl}
-                title={videoData.title}
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                loading="eager"
-              />
-            ) : (
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  height: 300,
-                  backgroundColor: "#f0f0f0",
-                  borderRadius: "8px",
-                  border: "2px solid #E55A2B",
-                }}
-              >
-                <Text fw="bold" fz="lg" c="dimmed">
-                  Loading video recommendations...
-                </Text>
-              </div>
+          <Stack gap="sm">
+            <MantineBox
+              w="100%"
+              h={550}
+              style={{
+                borderRadius: "8px",
+                border: "2px solid #E55A2B",
+                overflow: "hidden",
+                position: "relative"
+              }}
+            >
+              {!videoError && videoData.embedUrl ? (
+                <iframe
+                  key={retryCount} // Force re-render on retry
+                  width="100%"
+                  height="100%"
+                  src={videoData.embedUrl}
+                  title={videoData.title}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  loading="eager"
+                  sandbox="allow-scripts allow-same-origin allow-presentation allow-popups allow-popups-to-escape-sandbox"
+                  style={{ border: 'none' }}
+                />
+              ) : videoError || !videoData.embedUrl ? (
+                // Error state - show fallback UI
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 550,
+                    backgroundColor: "#f0f0f0",
+                    borderRadius: "8px",
+                    border: "2px solid #E55A2B",
+                    padding: "40px",
+                    gap: "20px"
+                  }}
+                >
+                  <Text fw="bold" fz="xl" c="dimmed" ta="center">
+                    Video Temporarily Unavailable
+                  </Text>
+                  <Text fz="md" c="dimmed" ta="center" maw={400}>
+                    We're having trouble loading the video in the app. Please use the button below to watch it on YouTube.
+                  </Text>
+                  <Group gap="md">
+                    <Button
+                      variant="outline"
+                      onClick={handleRetry}
+                      styles={{
+                        root: {
+                          borderColor: "#E55A2B",
+                          color: "#E55A2B",
+                          "&:hover": {
+                            backgroundColor: "rgba(229, 90, 43, 0.1)",
+                          }
+                        }
+                      }}
+                    >
+                      Try Again
+                    </Button>
+                    <Button
+                      variant="filled"
+                      component="a"
+                      href={videoData.playlistUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      styles={{
+                        root: {
+                          backgroundColor: "#E55A2B",
+                          "&:hover": {
+                            backgroundColor: "#D1451A",
+                          }
+                        }
+                      }}
+                    >
+                      Watch on YouTube
+                    </Button>
+                  </Group>
+                </div>
+              ) : (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: 550,
+                    backgroundColor: "#f0f0f0",
+                    borderRadius: "8px",
+                    border: "2px solid #E55A2B",
+                    padding: "20px",
+                  }}
+                >
+                  <Text fw="bold" fz="lg" c="dimmed" ta="center" mb="md">
+                    Loading video recommendations...
+                  </Text>
+                </div>
+              )}
+            </MantineBox>
+            
+            {/* Fallback link - Always visible for easy access */}
+            {videoData.embedUrl && videoData.playlistUrl && !videoError && (
+              <Text ta="center" size="sm" c="dimmed" mb={0}>
+                <Button
+                  variant="subtle"
+                  size="sm"
+                  component="a"
+                  href={videoData.playlistUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  styles={{
+                    root: {
+                      color: "#E55A2B",
+                      "&:hover": {
+                        backgroundColor: "rgba(229, 90, 43, 0.1)",
+                      }
+                    }
+                  }}
+                >
+                  Having trouble viewing? Watch on YouTube
+                </Button>
+              </Text>
             )}
-          </MantineBox>
+          </Stack>
           
           {/* Call to Action Button */}
           <Button
