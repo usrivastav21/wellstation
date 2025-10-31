@@ -136,6 +136,9 @@ export const Report = () => {
   useEffect(() => {
     if (
       user &&
+      user?.email &&
+      typeof user.email === 'string' &&
+      user.email.trim().length > 0 &&
       (reportId || trialId) &&
       (report.isSuccess || trialReport.isSuccess) &&
       !emailSentRef.current
@@ -144,8 +147,8 @@ export const Report = () => {
 
       sendEmail({
         reportLink,
-        name: user?.userName,
-        email: user?.email,
+        name: user?.userName || "User",
+        email: user.email.trim(),
         reportId: reportId || trialId,
       });
     }
@@ -156,6 +159,7 @@ export const Report = () => {
     report.isSuccess,
     trialReport.isSuccess,
     sendEmail,
+    reportLink,
   ]);
 
   // Timer effect for auto-close
@@ -239,51 +243,11 @@ export const Report = () => {
     }
   }, [isModalOpen]);
 
-  // Early returns must come after ALL hooks
-  if (report.isLoading || trialReport.isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (report.isError || trialReport.isError) {
-    return <div>Error</div>;
-  }
-
+  // Handle loading and error states after all hooks
+  // All hooks must be called before any conditional returns
+  const isLoading = report.isLoading || trialReport.isLoading;
+  const isError = report.isError || trialReport.isError;
   const data = trialId ? trialReport.data : report.data;
-  
-  // Add null check for data to prevent destructuring errors
-  if (!data) {
-    return <div>No data available</div>;
-  }
-  
-  const {
-    ageRange = null,
-    gender = null,
-    vitalSigns = null,
-    mentalHealthScores = null,
-  } = data || {};
-  
-  // Fallback: if mentalHealthScores is not available, try to get it from the original data structure
-  const fallbackMentalHealthScores = mentalHealthScores || data?.mental_health_scores;
-
-  console.log("data", trialId ? trialReport.data : report.data);
-  console.log("mentalHealthScores", mentalHealthScores);
-  console.log("fallbackMentalHealthScores", fallbackMentalHealthScores);
-  console.log("vitalSigns", vitalSigns);
-  let patientData = {
-    name: "Patient",
-    age: "N/A",
-    gender: "N/A",
-    bloodPressure: vitalSigns
-      ? `${vitalSigns.blood_pressure_systolic}/${vitalSigns.blood_pressure_diastolic}`
-      : "NA",
-    stressLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.stress}` : "NA",
-    restingHeartRate: vitalSigns ? `${vitalSigns.heart_rate}` : "70",
-    anxietyLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.anxiety}` : "NA",
-    bloodOxygenLevel: vitalSigns ? `${vitalSigns.spo2}` : "95",
-    depressionLevel: fallbackMentalHealthScores
-      ? `${fallbackMentalHealthScores.depression}`
-      : "NA",
-  };
 
   const LEVELS = ["low", "medium", "high"];
 
@@ -315,75 +279,11 @@ export const Report = () => {
     return value;
   };
 
-  const handleOpenInfoPopUp = (metric) => {
-    // console.log("<= metric", metric);
-    setSelectedMetric(metric);
-    // Convert translation string to array format expected by PopDisplayComponent
-    let infoText = t(`report.infoText.${metric.accessor}`, {
-      returnObjects: true,
-    });
-
-    // Ensure infoText is an array
-    if (!Array.isArray(infoText)) {
-      infoText = [infoText];
-    }
-
-    if (metric.name === "restingHeartRate") {
-      const heartRateUpdatedText = getUpdatedHeartRateText(t, ageRange || null, gender || null);
-
-      // Ensure heartRateUpdatedText is an array
-      const updatedTextArray = Array.isArray(heartRateUpdatedText)
-        ? heartRateUpdatedText
-        : [heartRateUpdatedText];
-
-      // Combine arrays safely
-      infoText = [
-        ...infoText.slice(0, 4),
-        ...updatedTextArray,
-        ...infoText.slice(8, 10),
-      ];
-    }
-
-    // console.log("<= after update", infoText);
-
-    setInfoText(infoText);
-    setIsInfoPopUpOpen(true);
-  };
+  // handleOpenInfoPopUp will be defined after data is available (moved below)
 
   const handleCloseInfoPopUp = () => {
     setInfoText(null);
     setIsInfoPopUpOpen(false);
-  };
-
-  // Function to calculate total score and determine video level
-  const getOverallHealthLevel = () => {
-    const stressScore = getStressScore(patientData.stressLevel);
-    const anxietyScore = getAnxietyScore(patientData.anxietyLevel);
-    const depressionScore = getDepressionScore(patientData.depressionLevel)
-    
-    const totalScore = stressScore + anxietyScore + depressionScore;
-    
-    console.log("Individual Scores:", { 
-      stress: patientData.stressLevel ,
-      stressScore,
-      anxiety: patientData.anxietyLevel, 
-      anxietyScore,
-      depression: patientData.depressionLevel, 
-      depressionScore,
-      totalScore 
-    });
-    
-    // Based on the scoring system from the image:
-    // Total Score 5-8 → Green (Low video)
-    // Total Score 9-11 → Yellow (Moderate video) 
-    // Total Score 12+ → Red (High video)
-    if (totalScore >= 12) {
-      return "high";
-    } else if (totalScore >= 9) {
-      return "moderate";
-    } else {
-      return "low";
-    }
   };
 
   // Helper functions to convert levels to numeric scores based on the exact scoring system
@@ -477,6 +377,149 @@ export const Report = () => {
     return null;
   };
 
+  const handleRetry = () => {
+    setVideoError(false);
+    setRetryCount(prev => prev + 1);
+  };
+
+  // Handle loading and error states in JSX (not early returns)
+  // All hooks have been called at this point, so early returns are safe
+  if (isLoading) {
+    return (
+      <Center h="100%">
+        <Stack gap={24} align="center">
+          <Text fz="xl" ta="center" fw="bold">
+            Loading...
+          </Text>
+        </Stack>
+      </Center>
+    );
+  }
+
+  if (isError) {
+    return (
+      <Center h="100%">
+        <Stack gap={24} align="center">
+          <Text fz="xl" ta="center" fw="bold" c="red">
+            Error loading report
+          </Text>
+        </Stack>
+      </Center>
+    );
+  }
+
+  if (!data) {
+    return (
+      <Center h="100%">
+        <Stack gap={24} align="center">
+          <Text fz="xl" ta="center" fw="bold">
+            No data available
+          </Text>
+        </Stack>
+      </Center>
+    );
+  }
+
+  // Now that we've confirmed data exists, we can safely compute data-dependent values
+  const {
+    ageRange = null,
+    gender = null,
+    vitalSigns = null,
+    mentalHealthScores = null,
+  } = data || {};
+  
+  // Fallback: if mentalHealthScores is not available, try to get it from the original data structure
+  const fallbackMentalHealthScores = mentalHealthScores || data?.mental_health_scores;
+
+  console.log("data", trialId ? trialReport.data : report.data);
+  console.log("mentalHealthScores", mentalHealthScores);
+  console.log("fallbackMentalHealthScores", fallbackMentalHealthScores);
+  console.log("vitalSigns", vitalSigns);
+  
+  let patientData = {
+    name: "Patient",
+    age: "N/A",
+    gender: "N/A",
+    bloodPressure: vitalSigns
+      ? `${vitalSigns.blood_pressure_systolic}/${vitalSigns.blood_pressure_diastolic}`
+      : "NA",
+    stressLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.stress}` : "NA",
+    restingHeartRate: vitalSigns ? `${vitalSigns.heart_rate}` : "70",
+    anxietyLevel: fallbackMentalHealthScores ? `${fallbackMentalHealthScores.anxiety}` : "NA",
+    bloodOxygenLevel: vitalSigns ? `${vitalSigns.spo2}` : "95",
+    depressionLevel: fallbackMentalHealthScores
+      ? `${fallbackMentalHealthScores.depression}`
+      : "NA",
+  };
+
+  // Now define handleOpenInfoPopUp after data is available
+  const handleOpenInfoPopUp = (metric) => {
+    // console.log("<= metric", metric);
+    setSelectedMetric(metric);
+    // Convert translation string to array format expected by PopDisplayComponent
+    let infoText = t(`report.infoText.${metric.accessor}`, {
+      returnObjects: true,
+    });
+
+    // Ensure infoText is an array
+    if (!Array.isArray(infoText)) {
+      infoText = [infoText];
+    }
+
+    if (metric.name === "restingHeartRate") {
+      const heartRateUpdatedText = getUpdatedHeartRateText(t, ageRange || null, gender || null);
+
+      // Ensure heartRateUpdatedText is an array
+      const updatedTextArray = Array.isArray(heartRateUpdatedText)
+        ? heartRateUpdatedText
+        : [heartRateUpdatedText];
+
+      // Combine arrays safely
+      infoText = [
+        ...infoText.slice(0, 4),
+        ...updatedTextArray,
+        ...infoText.slice(8, 10),
+      ];
+    }
+
+    // console.log("<= after update", infoText);
+
+    setInfoText(infoText);
+    setIsInfoPopUpOpen(true);
+  };
+
+  // Function to calculate total score and determine video level
+  // This function is called after patientData is defined
+  const getOverallHealthLevel = () => {
+    const stressScore = getStressScore(patientData.stressLevel);
+    const anxietyScore = getAnxietyScore(patientData.anxietyLevel);
+    const depressionScore = getDepressionScore(patientData.depressionLevel)
+    
+    const totalScore = stressScore + anxietyScore + depressionScore;
+    
+    console.log("Individual Scores:", { 
+      stress: patientData.stressLevel ,
+      stressScore,
+      anxiety: patientData.anxietyLevel, 
+      anxietyScore,
+      depression: patientData.depressionLevel, 
+      depressionScore,
+      totalScore 
+    });
+    
+    // Based on the scoring system from the image:
+    // Total Score 5-8 → Green (Low video)
+    // Total Score 9-11 → Yellow (Moderate video) 
+    // Total Score 12+ → Red (High video)
+    if (totalScore >= 12) {
+      return "high";
+    } else if (totalScore >= 9) {
+      return "moderate";
+    } else {
+      return "low";
+    }
+  };
+
   const overallHealthLevel = getOverallHealthLevel();
   
   // Create single video data based on overall health level
@@ -491,11 +534,6 @@ export const Report = () => {
       ? `${baseEmbedUrl}&t=${Date.now()}`
       : baseEmbedUrl,
     title: `${overallHealthLevel.charAt(0).toUpperCase() + overallHealthLevel.slice(1)} Level Recommendations`
-  };
-
-  const handleRetry = () => {
-    setVideoError(false);
-    setRetryCount(prev => prev + 1);
   };
 
   // Debug logging
