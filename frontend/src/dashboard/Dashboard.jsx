@@ -145,6 +145,9 @@ const Chart = ({ getChartData, xAxisProps, series }) => {
   return (
     <LineChart
       h={576}
+      w="100%"
+      minWidth={0}
+      minHeight={0}
       withLegend
       classNames={{
         legend: classes.legend,
@@ -330,7 +333,7 @@ const WeekPanelContent = ({ label, levelKey }) => {
   // console.log("chart data", getChartData());
 
   return (
-    <Stack gap={0}>
+    <Stack gap={0} w="100%">
       <DateNavigation
         dateContent={`${format(weekStartDate, "dd MMM")} - ${format(
           weekEndDate,
@@ -425,7 +428,7 @@ const MonthPanelContent = ({ label, levelKey }) => {
   }, [monthReports.data?.data, levelKey]);
 
   return (
-    <Stack gap={0}>
+    <Stack gap={0} w="100%">
       <DateNavigation
         dateContent={`${format(month, "yyyy MMM")}`}
         updatePrevious={updatePreviousMonth}
@@ -511,7 +514,7 @@ const YearPanelContent = ({ label, levelKey }) => {
   }, [yearReports.data?.data, levelKey]);
 
   return (
-    <Stack gap={0}>
+    <Stack gap={0} w="100%">
       <DateNavigation
         dateContent={`${format(year, "yyyy")}`}
         updatePrevious={updatePreviousYear}

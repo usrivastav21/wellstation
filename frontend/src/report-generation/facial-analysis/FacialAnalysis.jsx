@@ -123,23 +123,39 @@ export const FacialAnalysis = () => {
       }
 
       // Access currentDevice directly from the hook (no dependency)
-      const newStream = await startStream(currentDevice?.deviceId);
+      try {
+        const newStream = await startStream(currentDevice?.deviceId);
 
-      if (newStream && videoRef.current) {
-        videoRef.current.srcObject = newStream;
-        videoRef.current.onloadedmetadata = async () => {
-          try {
-            await videoRef.current.play();
-            setIsCameraReady(true);
-            addLog(`Camera ready: ${currentDevice?.label || "Default Camera"}`);
-          } catch (playError) {
-            console.error("Error playing video:", playError);
-            setErrorMessage(t("facialAnalysis.cameraPlayError"));
-          }
-        };
+        if (newStream && videoRef.current) {
+          videoRef.current.srcObject = newStream;
+          videoRef.current.onloadedmetadata = async () => {
+            try {
+              await videoRef.current.play();
+              setIsCameraReady(true);
+              addLog(`Camera ready: ${currentDevice?.label || "Default Camera"}`);
+            } catch (playError) {
+              console.error("Error playing video:", playError);
+              setErrorMessage(t("facialAnalysis.cameraPlayError"));
+            }
+          };
+        }
+      } catch (streamError) {
+        // Handle stream errors specifically
+        console.error("Error accessing camera:", streamError);
+        if (streamError.name === "NotAllowedError") {
+          setErrorMessage(t("facialAnalysis.permissionDenied"));
+        } else if (streamError.name === "NotFoundError") {
+          setErrorMessage(t("facialAnalysis.cameraNotFound"));
+        } else if (streamError.name === "OverconstrainedError") {
+          setErrorMessage(t("facialAnalysis.cameraConstraintsError"));
+        } else {
+          setErrorMessage(t("facialAnalysis.cameraError"));
+        }
+        // Don't re-throw - error is already handled
       }
     } catch (error) {
       console.error("Camera initialization error:", error);
+      // Fallback error handling for any other errors
       if (error.name === "NotAllowedError") {
         setErrorMessage(t("facialAnalysis.permissionDenied"));
       } else if (error.name === "NotFoundError") {

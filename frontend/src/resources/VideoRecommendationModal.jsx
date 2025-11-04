@@ -16,17 +16,40 @@ export const VideoRecommendationModal = ({ opened, onClose }) => {
   const recommendationData = recommendations.data || { videos: [] };
 
   if (recommendations.isFetching) {
-    return <Loader />;
+    return (
+      <Modal
+        opened={opened}
+        onClose={onClose}
+        size={984}
+        closeButtonProps={{
+          size: "xl",
+        }}
+        classNames={{
+          body: classes.body,
+          content: classes.content,
+        }}
+      >
+        <Stack gap={48} align="center" px={64}>
+          <Loader />
+        </Stack>
+      </Modal>
+    );
   }
 
   if (recommendations.isError) {
-    throw new Error("recommendations fetch error");
+    // Handle error gracefully - don't show modal if there's an error
+    return null;
   }
 
-  const randomVideo =
-    recommendationData.videos[
-      Math.floor(Math.random() * recommendationData.videos.length)
-    ];
+  const videos = recommendationData.videos || [];
+  const randomVideo = videos.length > 0 
+    ? videos[Math.floor(Math.random() * videos.length)]
+    : null;
+
+  // If no videos available, don't show the modal
+  if (!randomVideo) {
+    return null;
+  }
 
   return (
     <Modal
@@ -43,15 +66,11 @@ export const VideoRecommendationModal = ({ opened, onClose }) => {
     >
       <Stack gap={48} align="center" px={64}>
         <Text fz="4xl" ta="center" lh={1.2}>
-          Nice work completing the scan. We’ve made a short video that might be
-          helpful for where you’re at.
+          Nice work completing the scan. We've made a short video that might be
+          helpful for where you're at.
         </Text>
         <Stack align="center" justify="center" w="100%">
-          {recommendations.isFetching ? (
-            <Loader />
-          ) : (
-            <VideoPlayer showMetadata={false} video={randomVideo} />
-          )}
+          <VideoPlayer showMetadata={false} video={randomVideo} />
         </Stack>
 
         <Group gap={32}>

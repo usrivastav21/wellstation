@@ -113,12 +113,19 @@
   "facialAnalysis": {
     "anonymityMaintained": "Your anonymity is maintained.",
     "cameraError": "Unable to access the camera. Please check your permissions.",
+    "cameraNotFound": "No camera found. Please connect a camera and try again.",
+    "cameraConstraintsError": "Camera constraints could not be satisfied. Please try a different camera.",
+    "cameraPlayError": "Error playing camera stream. Please refresh the page.",
     "dataPrivacy": "Your identity is secure.",
+    "detectionError": "Error detecting faces. Please try again.",
     "faceObstructed": "Face is partially obstructed. Please remove any mask or cap.",
     "loadingModels": "",
+    "mediaDevicesNotSupported": "MediaDevices API is not supported in this browser.",
+    "modelLoadError": "Failed to load face detection models. Please refresh the page.",
     "multipleFaces": "Multiple faces detected. Please make sure only one person is doing the scan at any one time.",
     "nearlyComplete": "Nearly complete!",
     "noFaceDetected": "No face detected or partially obstructed. Remove any glasses, mask, or cap and align your face within the circled frame.",
+    "permissionDenied": "Camera permission denied. Please allow camera access in your browser settings and try again.",
     "scanningProgress": {
       "almostDone": {
         "line1": "Nearly complete!",
