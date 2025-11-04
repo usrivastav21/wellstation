@@ -26,9 +26,21 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout the repository (uses the branch that triggered the workflow)
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          fetch-depth: 0  # Fetch all history for full branch context
+
+      # Step 1b: Verify which branch is being built
+      - name: Verify Branch
+        run: |
+          Write-Host "🔍 Building from branch: ${{ github.ref_name }}"
+          Write-Host "📦 Full ref: ${{ github.ref }}"
+          git branch --show-current
+          git log --oneline -5
+        shell: pwsh
 
       # Step 2: Setup Python (required for backend)
       - name: Setup Python
